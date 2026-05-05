@@ -46,17 +46,17 @@ export default async function LeaderboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-100 px-6 h-14 flex items-center justify-between sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-100 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-50">
         <Link href="/" className="font-black text-green-900 text-lg">theKabari</Link>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3">
           {session ? (
-            <Link href="/dashboard" className="px-4 py-2 rounded-full bg-green-400 text-white text-sm font-semibold hover:bg-green-900 transition-colors">
+            <Link href="/dashboard" className="px-3 sm:px-4 py-2 rounded-full bg-green-400 text-white text-sm font-semibold hover:bg-green-900 transition-colors whitespace-nowrap">
               My Dashboard
             </Link>
           ) : (
             <>
-              <Link href="/auth" className="px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-green-400 hover:text-green-600 transition-all">Login</Link>
-              <Link href="/auth?tab=signup" className="px-4 py-2 rounded-full bg-green-400 text-white text-sm font-semibold hover:bg-green-900 transition-colors">Join ↗</Link>
+              <Link href="/auth" className="hidden sm:block px-4 py-2 rounded-full border border-gray-200 text-sm font-semibold hover:border-green-400 hover:text-green-600 transition-all">Login</Link>
+              <Link href="/auth?tab=signup" className="px-3 sm:px-4 py-2 rounded-full bg-green-400 text-white text-sm font-semibold hover:bg-green-900 transition-colors whitespace-nowrap">Join ↗</Link>
             </>
           )}
         </div>

@@ -214,10 +214,10 @@ export default function PickupPage() {
               {/* Trash Types */}
               <div>
                 <label className={labelCls}>Kya scrap hai? (multiple select kar sakte hain)</label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {TRASH_TYPES.map(t => (
                     <button key={t.id} type="button" onClick={() => toggleType(t.id)}
-                      className={`flex flex-col items-center gap-1 p-3 rounded-xl border text-xs font-semibold transition-all ${
+                      className={`flex flex-col items-center gap-1.5 py-4 px-2 rounded-xl border text-xs font-semibold transition-all ${
                         trashTypes.includes(t.id)
                           ? "bg-green-50 border-green-400 text-green-700"
                           : "bg-gray-50 border-gray-200 text-gray-500 hover:border-green-200"

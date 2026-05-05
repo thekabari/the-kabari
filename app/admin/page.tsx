@@ -110,7 +110,7 @@ export default function AdminPage() {
       </aside>
 
       {/* MAIN */}
-      <main className="flex-1 p-5 md:p-8 overflow-auto">
+      <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-auto">
 
         {/* OVERVIEW */}
         {tab === "overview" && (
@@ -301,10 +301,10 @@ function RequestsTab({ orders, onUpdate, showToast }: {
       <p className="text-gray-400 text-sm mb-5">Saare pickup requests manage karo</p>
 
       {/* Filter tabs */}
-      <div className="flex gap-2 flex-wrap mb-5">
+      <div className="flex gap-2 overflow-x-auto pb-1 mb-5 -mx-1 px-1 scrollbar-hide">
         {STATUS_FILTERS.map(s => (
           <button key={s} onClick={() => setFilter(s)}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all capitalize ${
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all capitalize whitespace-nowrap flex-shrink-0 ${
               filter === s ? "bg-green-400 text-white" : "bg-white border border-gray-200 text-gray-500 hover:border-green-300"
             }`}>
             {s === "all" ? `All (${orders.length})` :

@@ -56,21 +56,24 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* TOP NAV */}
-      <nav className="bg-white border-b border-gray-100 px-6 h-14 flex items-center justify-between sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-100 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-50">
         <span className="font-black text-green-900 text-lg">theKabari</span>
-        <div className="flex items-center gap-4">
-          <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-green-600 font-medium transition-colors">
-            🏆 Leaderboard
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Link href="/pickup" className="text-xs sm:text-sm bg-green-50 text-green-600 hover:bg-green-400 hover:text-white font-semibold px-3 py-1.5 rounded-full transition-colors">
+            + Pickup
           </Link>
-          <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-red-500 transition-colors">
+          <Link href="/leaderboard" className="text-xs sm:text-sm text-gray-500 hover:text-green-600 font-medium transition-colors hidden xs:block">
+            🏆 <span className="hidden sm:inline">Leaderboard</span>
+          </Link>
+          <button onClick={handleLogout} className="text-xs sm:text-sm text-gray-400 hover:text-red-500 transition-colors">
             Logout
           </button>
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 pb-20">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-5 sm:py-8 pb-8">
         {/* HERO CARD */}
-        <div className="bg-green-900 rounded-3xl p-7 mb-6 text-white relative overflow-hidden">
+        <div className="bg-green-900 rounded-3xl p-5 sm:p-7 mb-5 sm:mb-6 text-white relative overflow-hidden">
           <div className="absolute w-40 h-40 rounded-full bg-white/5 -top-10 -right-10" />
           <div className="absolute w-24 h-24 rounded-full bg-white/5 bottom-4 left-4" />
           <div className="relative">
@@ -80,8 +83,8 @@ function Dashboard() {
                 <h1 className="text-2xl font-black tracking-tight">{profile.name} 👋</h1>
                 <p className="text-white/60 text-sm mt-1">Level {lvl} — {getLevelName(profile.xp)}</p>
               </div>
-              <div className="bg-white/10 border border-white/15 rounded-2xl px-4 py-2 text-center">
-                <div className="text-2xl font-black">{profile.xp}</div>
+              <div className="bg-white/10 border border-white/15 rounded-2xl px-3 sm:px-4 py-2 text-center flex-shrink-0">
+                <div className="text-xl sm:text-2xl font-black">{profile.xp}</div>
                 <div className="text-white/50 text-xs">Total XP</div>
               </div>
             </div>
@@ -104,8 +107,8 @@ function Dashboard() {
             { n: `${Number(profile.total_kg).toFixed(1)} kg`, l: "kg recycled", c: "bg-white" },
             { n: `Rs.${profile.total_cash}`, l: "Cash earned", c: "bg-white" },
           ].map(s => (
-            <div key={s.l} className={`${s.c} rounded-2xl p-4 border border-gray-100`}>
-              <div className={`text-2xl font-black tracking-tight ${s.c.includes("green") ? "text-white" : "text-gray-900"}`}>{s.n}</div>
+            <div key={s.l} className={`${s.c} rounded-2xl p-3 sm:p-4 border border-gray-100`}>
+              <div className={`text-xl sm:text-2xl font-black tracking-tight ${s.c.includes("green") ? "text-white" : "text-gray-900"}`}>{s.n}</div>
               <div className={`text-xs mt-1 ${s.c.includes("green") ? "text-white/70" : "text-gray-400"}`}>{s.l}</div>
             </div>
           ))}
