@@ -1,12 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Profile, Pickup, Order } from "@/types";
 import { getLevel, getLevelName, getLevelProgress, getNextLevelXP, formatDate, SCRAP_EMOJI } from "@/lib/utils";
 import Link from "next/link";
 
 export default function DashboardPage() {
+  return (
+    <Suspense>
+      <Dashboard />
+    </Suspense>
+  );
+}
+
+function Dashboard() {
   const router = useRouter();
   const params = useSearchParams();
   const isPending = params.get("pending") === "true";
