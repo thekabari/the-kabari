@@ -147,19 +147,6 @@ export default function HomePage() {
         </AnimatePresence>
       </motion.nav>
 
-      {/* TICKER */}
-      <div className="bg-green-400 overflow-hidden py-2">
-        <div className="flex animate-[ticker_30s_linear_infinite] whitespace-nowrap">
-          {[...Array(2)].map((_, i) => (
-            <span key={i} className="flex gap-12 mr-12">
-              {["Ahmed from Karachi recycled 12kg paper ✦","Sara from Lahore got Eco Warrior badge ✦","Islamabad city just unlocked ✦","Fatima hit Level 5 Recycler ✦","Hassan collected 8kg metal ✦"].map((t, j) => (
-                <span key={j} className="text-white/85 text-xs font-medium">{t}</span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* HERO */}
       <section className="max-w-6xl mx-auto px-5 md:px-12 py-12 sm:py-20 md:py-28 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
         <div>
@@ -647,9 +634,6 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <style jsx global>{`
-        @keyframes ticker { from { transform: translateX(0) } to { transform: translateX(-50%) } }
-      `}</style>
     </div>
   );
 }
