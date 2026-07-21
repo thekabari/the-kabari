@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
+
+export const metadata: Metadata = {
+  title: "Leaderboard",
+  description: "theKabari ka top recyclers ka leaderboard. Dekho kaun hai Pakistan ka best recycler — XP, kg, aur rank.",
+  alternates: { canonical: "https://thekabari.pk/leaderboard" },
+};
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getLevel, getLevelName } from "@/lib/utils";
