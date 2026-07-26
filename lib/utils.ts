@@ -50,3 +50,15 @@ export const SCRAP_EMOJI: Record<string, string> = {
   Paper: "📄", Plastic: "🧴", Metal: "🔩",
   Electronics: "💻", Glass: "🫙", Cardboard: "📦",
 };
+
+// 1 PKR cash received at pickup = 1 XP (earning side)
+export function cashToXP(cashPkr: number): number {
+  return Math.floor(cashPkr);
+}
+
+// 1 PKR item value = 20 XP to redeem (spending side)
+export const POINTS_PER_PKR = 20;
+
+export function itemPointsCost(pricePkr: number): number {
+  return pricePkr * POINTS_PER_PKR;
+}
