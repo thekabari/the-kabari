@@ -17,7 +17,9 @@ export async function GET(req: NextRequest) {
   if (!(await assertAdmin(req))) return NextResponse.json(null, { status: 403 });
 
   const supabase = createAdminClient();
-  const { data: partners, error } = await supabase
+
+  // Try with portal_password_hash first; fall back if column doesn't exist yet
+  let { data: partners, error } = await supabase
     .from("partners")
     .select(`
       id, name, description, category, emoji, city, portal_slug, active, created_at, portal_password_hash,
@@ -25,9 +27,20 @@ export async function GET(req: NextRequest) {
     `)
     .order("created_at", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    // Column doesn't exist yet — retry without it
+    const fallback = await supabase
+      .from("partners")
+      .select(`
+        id, name, description, category, emoji, city, portal_slug, active, created_at,
+        items:partner_items(id, name, description, price_pkr, expiry_days, active, created_at)
+      `)
+      .order("created_at", { ascending: true });
+    if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 500 });
+    return NextResponse.json((fallback.data ?? []).map(p => ({ ...p, has_password: false })));
+  }
 
-  const safe = (partners ?? []).map(({ portal_password_hash, ...p }) => ({
+  const safe = (partners ?? []).map(({ portal_password_hash, ...p }: { portal_password_hash: string | null; [key: string]: unknown }) => ({
     ...p,
     has_password: !!portal_password_hash,
   }));
