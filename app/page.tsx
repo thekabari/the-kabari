@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { LogoMark } from "./components/LogoMark";
 import { motion, useInView, AnimatePresence, useMotionValue, animate, useTransform, type Variants } from "framer-motion";
 
 /* ── Easing & spring ────────────────────────────── */
@@ -80,7 +81,7 @@ export default function HomePage() {
         className="sticky top-0 z-50 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-green-50 dark:border-gray-800"
       >
         <div className="px-5 md:px-12 h-16 flex items-center justify-between">
-          <Link href="/" className="text-xl font-black text-green-900 dark:text-green-400 tracking-tight">theKabari</Link>
+          <Link href="/"><LogoMark size={28} /></Link>
 
           <div className="hidden md:flex gap-8 text-sm text-gray-500 dark:text-gray-400 font-medium">
             {[["#how","How it works"],["#services","Services"],["#corporate","For Business"]].map(([href, label]) => (
@@ -353,7 +354,7 @@ export default function HomePage() {
           <motion.p
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
             viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-xs text-gray-400 dark:text-gray-500 mt-5"
+            className="text-sm text-gray-500 dark:text-gray-400 mt-5"
           >* Rates market price ke saath change hote hain. Final rate pickup ke waqt confirm hoga.</motion.p>
         </div>
       </section>
@@ -567,7 +568,7 @@ export default function HomePage() {
                 <div className="relative">
                   <div className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${r.glow ? "text-white/40" : "text-gray-400 dark:text-gray-600"}`}>{r.step}</div>
                   <div className={`text-base font-black mb-1 ${r.glow ? "text-white" : "text-gray-900 dark:text-white"}`}>{r.title}</div>
-                  <p className={`text-xs leading-relaxed ${r.glow ? "text-white/55" : "text-gray-500 dark:text-gray-400"}`}>{r.desc}</p>
+                  <p className={`text-sm leading-relaxed ${r.glow ? "text-white/70" : "text-gray-500 dark:text-gray-400"}`}>{r.desc}</p>
                 </div>
                 {i < 3 && (
                   <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-full flex items-center justify-center z-10 text-gray-400 text-xs font-bold" style={{display:"flex",alignItems:"center",justifyContent:"center"}}>→</div>
@@ -598,7 +599,7 @@ export default function HomePage() {
                 >
                   <div className="text-2xl mb-2">{p.icon}</div>
                   <div className="text-xs font-bold text-gray-900 dark:text-white mb-1">{p.label}</div>
-                  <div className="text-[10px] text-gray-400 dark:text-gray-500 leading-tight">{p.desc}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{p.desc}</div>
                 </motion.div>
               ))}
             </InView>
@@ -652,7 +653,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 36, filter: "blur(8px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ ease: EASE, duration: 0.7, delay: 0.2 }}
-                className="text-white/45 text-sm sm:text-base max-w-lg leading-relaxed"
+                className="text-white/70 text-sm sm:text-base max-w-lg leading-relaxed"
               >
                 Factories, offices, hospitals, restaurants — har scale ke liye managed scrap collection. CSR-ready reports. Zero hassle.
               </motion.p>
@@ -675,7 +676,7 @@ export default function HomePage() {
                   <div className="text-xl sm:text-2xl font-black text-green-400">
                     <CountUp value={s.n} suffix={s.suffix} />
                   </div>
-                  <div className="text-[10px] text-white/35 mt-0.5 leading-tight">{s.l}</div>
+                  <div className="text-[10px] text-white/60 mt-0.5 leading-tight">{s.l}</div>
                 </motion.div>
               ))}
             </div>
@@ -702,7 +703,7 @@ export default function HomePage() {
                     className="text-2xl mb-2 inline-block"
                   >{f.icon}</motion.div>
                   <h4 className="text-white text-sm font-bold mb-1 group-hover:text-green-400 transition-colors">{f.title}</h4>
-                  <p className="text-white/35 text-xs leading-relaxed">{f.desc}</p>
+                  <p className="text-white/65 text-sm leading-relaxed">{f.desc}</p>
                 </motion.div>
               ))}
             </InView>
@@ -720,15 +721,15 @@ export default function HomePage() {
                   className="w-10 h-10 bg-green-400/15 rounded-2xl flex items-center justify-center text-xl mb-4 inline-flex"
                 >🏢</motion.div>
                 <h3 className="text-white text-xl font-black mb-2">Partner karo theKabari se</h3>
-                <p className="text-white/40 text-sm leading-relaxed">
+                <p className="text-white/65 text-sm leading-relaxed">
                   Form bharo — aapka dedicated account manager 48 ghante mein contact karega.
                 </p>
               </div>
               <CorporateForm />
               <div className="mt-6 pt-5 border-t border-white/[0.06]">
-                <p className="text-white/25 text-xs text-center">
+                <p className="text-white/50 text-sm text-center">
                   Already a partner? Email{" "}
-                  <a href="mailto:corporate@thekabari.pk" className="text-green-400/70 hover:text-green-400 transition-colors">
+                  <a href="mailto:corporate@thekabari.pk" className="text-green-400/80 hover:text-green-400 transition-colors">
                     corporate@thekabari.pk
                   </a>
                 </p>
@@ -743,7 +744,7 @@ export default function HomePage() {
             transition={{ ease: EASE, duration: 0.65 }}
             className="bg-white/[0.03] border border-white/[0.06] rounded-2xl px-5 sm:px-8 py-4 flex flex-col sm:flex-row items-center gap-4 sm:gap-8"
           >
-            <span className="text-white/25 text-xs font-semibold uppercase tracking-widest whitespace-nowrap">Trusted by</span>
+            <span className="text-white/50 text-xs font-semibold uppercase tracking-widest whitespace-nowrap">Trusted by</span>
             <div className="w-px h-4 bg-white/10 hidden sm:block" />
             <div className="flex flex-wrap gap-x-8 gap-y-2 justify-center sm:justify-start">
               {["Textile Mills","Restaurant Chains","IT Companies","Hospitals","Construction Firms","Retail Brands"].map((b, i) => (
@@ -752,7 +753,7 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ ease: EASE, duration: 0.4, delay: 0.05 + i * 0.08 }}
                   whileHover={{ opacity: 1, color: "rgba(74,222,128,0.8)", y: -2, transition: { duration: 0.15 } }}
-                  className="text-white/30 text-sm font-semibold cursor-default"
+                  className="text-white/60 text-sm font-semibold cursor-default"
                 >{b}</motion.span>
               ))}
             </div>
@@ -864,8 +865,8 @@ export default function HomePage() {
       <footer className="bg-gray-900 dark:bg-gray-950 dark:border-t dark:border-gray-800 px-5 md:px-12 pt-12 pb-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
-            <div className="text-xl font-black text-white mb-3">theKabari</div>
-            <p className="text-sm text-white/35 leading-relaxed">Pakistan ka pehla gamified scrap pickup — XP kamao, paise lo, Pakistan saaf karo.</p>
+            <div className="mb-3"><LogoMark variant="inverted" size={26} /></div>
+            <p className="text-sm text-white/60 leading-relaxed">Pakistan ka pehla gamified scrap pickup — XP kamao, paise lo, Pakistan saaf karo.</p>
           </div>
           {[
             { h:"Individuals", links:["Scrap collection","E-waste pickup","Scrap rates","XP & Levels"] },
@@ -873,17 +874,17 @@ export default function HomePage() {
             { h:"Company", links:["About us","Careers","Contact","Privacy policy"] },
           ].map(col => (
             <div key={col.h}>
-              <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-4">{col.h}</h4>
-              {col.links.map(l => <a key={l} href="#" className="block text-sm text-white/40 hover:text-white/80 mb-2.5 transition-colors">{l}</a>)}
+              <h4 className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-4">{col.h}</h4>
+              {col.links.map(l => <a key={l} href="#" className="block text-sm text-white/60 hover:text-white/90 mb-2.5 transition-colors">{l}</a>)}
             </div>
           ))}
         </div>
         <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <span className="text-xs text-white/20">© 2025 theKabari — Made with love in Pakistan</span>
+          <span className="text-xs text-white/40">© 2025 theKabari — Made with love in Pakistan</span>
           <div className="flex gap-4">
-            <Link href="/privacy" className="text-xs text-white/25 hover:text-white/60 transition-colors">Privacy</Link>
-            <Link href="/terms"   className="text-xs text-white/25 hover:text-white/60 transition-colors">Terms</Link>
-            <a href="/sitemap.xml" className="text-xs text-white/25 hover:text-white/60 transition-colors">Sitemap</a>
+            <Link href="/privacy" className="text-xs text-white/45 hover:text-white/70 transition-colors">Privacy</Link>
+            <Link href="/terms"   className="text-xs text-white/45 hover:text-white/70 transition-colors">Terms</Link>
+            <a href="/sitemap.xml" className="text-xs text-white/45 hover:text-white/70 transition-colors">Sitemap</a>
           </div>
         </div>
       </footer>

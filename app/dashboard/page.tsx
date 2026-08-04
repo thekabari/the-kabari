@@ -8,6 +8,7 @@ import {
   formatDate, SCRAP_EMOJI, itemPointsCost,
 } from "@/lib/utils";
 import Link from "next/link";
+import { LogoMark } from "@/app/components/LogoMark";
 
 type Tab = "overview" | "pickups" | "rewards" | "levelup";
 
@@ -124,8 +125,7 @@ function Dashboard() {
       <aside className="fixed inset-y-0 left-0 w-60 hidden md:flex flex-col z-40" style={{ background: "#003c1e" }}>
         {/* Brand */}
         <div className="h-16 flex items-center px-5 flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.10)" }}>
-          <span className="font-black text-white text-lg tracking-tight">theKabari</span>
-          <span className="ml-2 text-base">♻️</span>
+          <LogoMark variant="inverted" size={30} />
         </div>
 
         {/* XP pill */}
@@ -194,7 +194,7 @@ function Dashboard() {
 
         {/* Mobile top bar */}
         <header className="md:hidden sticky top-0 z-30 h-14 flex items-center justify-between px-4 flex-shrink-0" style={{ background: "#003c1e" }}>
-          <span className="font-black text-white text-base">theKabari ♻️</span>
+          <LogoMark variant="inverted" size={26} />
           <div className="flex items-center gap-2.5">
             <span className="text-amber-400 text-sm font-bold tabular-nums">{profile.xp.toLocaleString()} XP</span>
             <Link href="/pickup" className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: "#f0a500", color: "#003c1e" }}>

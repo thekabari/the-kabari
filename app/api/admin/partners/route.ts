@@ -20,13 +20,18 @@ export async function GET(req: NextRequest) {
   const { data: partners, error } = await supabase
     .from("partners")
     .select(`
-      id, name, description, category, emoji, city, portal_slug, active, created_at,
+      id, name, description, category, emoji, city, portal_slug, active, created_at, portal_password_hash,
       items:partner_items(id, name, description, price_pkr, expiry_days, active, created_at)
     `)
     .order("created_at", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(partners ?? []);
+
+  const safe = (partners ?? []).map(({ portal_password_hash, ...p }) => ({
+    ...p,
+    has_password: !!portal_password_hash,
+  }));
+  return NextResponse.json(safe);
 }
 
 export async function POST(req: NextRequest) {

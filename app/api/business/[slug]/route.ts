@@ -10,7 +10,7 @@ export async function GET(
 
   const { data: partner, error } = await supabase
     .from("partners")
-    .select("id, name, description, category, emoji, city, active")
+    .select("id, name, description, category, emoji, city, active, portal_password_hash")
     .eq("portal_slug", slug)
     .single();
 
@@ -18,5 +18,7 @@ export async function GET(
     return NextResponse.json({ error: "Portal not found" }, { status: 404 });
   }
 
-  return NextResponse.json(partner);
+  // Expose whether a password is required without leaking the hash
+  const { portal_password_hash, ...safe } = partner;
+  return NextResponse.json({ ...safe, has_password: !!portal_password_hash });
 }

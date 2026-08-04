@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Profile, Pickup, Order, Partner, PartnerItem } from "@/types";
 import { getLevel, formatDate, SCRAP_EMOJI, XP_RATES, itemPointsCost } from "@/lib/utils";
+import { LogoMark } from "@/app/components/LogoMark";
 
 type Tab = "overview" | "pending" | "requests" | "users" | "addxp" | "partners" | "settlement";
 
@@ -111,8 +112,8 @@ export default function AdminPage() {
       {/* ── SIDEBAR (desktop) ── */}
       <aside className="fixed inset-y-0 left-0 w-60 hidden md:flex flex-col z-40" style={{ background: "#003c1e" }}>
         <div className="h-16 flex flex-col justify-center px-5 flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.10)" }}>
-          <div className="font-black text-white text-lg tracking-tight">theKabari</div>
-          <div className="text-[10px] font-medium mt-0.5" style={{ color: "rgba(255,255,255,0.38)" }}>Admin Panel</div>
+          <LogoMark variant="inverted" size={26} />
+          <div className="text-[10px] font-medium mt-1.5" style={{ color: "rgba(255,255,255,0.38)" }}>Admin Panel</div>
         </div>
 
         <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
@@ -160,7 +161,7 @@ export default function AdminPage() {
         {/* Mobile top bar */}
         <header className="md:hidden sticky top-0 z-30 h-14 flex items-center justify-between px-4 flex-shrink-0" style={{ background: "#003c1e" }}>
           <div>
-            <span className="font-black text-white text-base">theKabari</span>
+            <LogoMark variant="inverted" size={22} />
             <span className="ml-2 text-xs font-medium" style={{ color: "rgba(255,255,255,0.45)" }}>Admin</span>
           </div>
           {(pendingOrders.length + pending.length) > 0 && (
@@ -715,7 +716,7 @@ function AddXPTab({ approved, onSuccess }: {
 // ─── Partners Tab ─────────────────────────────────────────────────────────────
 
 type PartnerItemWithPts = PartnerItem & { points_required: number };
-type PartnerWithItems  = Partner & { items?: PartnerItemWithPts[] };
+type PartnerWithItems  = Partner & { items?: PartnerItemWithPts[]; has_password?: boolean };
 
 function PartnersTab({ showToast }: { showToast: (msg: string) => void }) {
   const [partners, setPartners] = useState<PartnerWithItems[]>([]);
@@ -726,18 +727,39 @@ function PartnersTab({ showToast }: { showToast: (msg: string) => void }) {
   const [newPartner, setNewPartner] = useState({ name: "", description: "", category: "cafe", emoji: "☕", city: "" });
   const [newItem, setNewItem] = useState({ name: "", description: "", price_pkr: "", expiry_days: "60" });
   const [addingItemFor, setAddingItemFor] = useState<string | null>(null);
+  const [passwordFor, setPasswordFor] = useState<string | null>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [settingPassword, setSettingPassword] = useState(false);
 
   async function loadPartners() {
     setLoading(true);
     const res = await fetch("/api/admin/partners");
     if (res.ok) {
       const data = await res.json();
-      setPartners(data.map((p: Partner & { items?: PartnerItem[] }): PartnerWithItems => ({
+      setPartners(data.map((p: Partner & { items?: PartnerItem[]; has_password?: boolean }): PartnerWithItems => ({
         ...p,
+        has_password: p.has_password ?? false,
         items: (p.items ?? []).map(it => ({ ...it, points_required: itemPointsCost(it.price_pkr) })),
       })));
     }
     setLoading(false);
+  }
+
+  async function handleSetPassword(e: React.FormEvent, partnerId: string) {
+    e.preventDefault();
+    setSettingPassword(true);
+    const res = await fetch(`/api/admin/partners/${partnerId}/set-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: newPassword }),
+    });
+    const data = await res.json().catch(() => null);
+    setSettingPassword(false);
+    if (!res.ok) { showToast(data?.error || "Failed to set password"); return; }
+    showToast(newPassword ? "Portal password set ✓" : "Password cleared — portal is now public");
+    setPasswordFor(null);
+    setNewPassword("");
+    setPartners(ps => ps.map(p => p.id === partnerId ? { ...p, has_password: !!newPassword } : p));
   }
 
   useEffect(() => { loadPartners(); }, []);
@@ -895,9 +917,19 @@ function PartnersTab({ showToast }: { showToast: (msg: string) => void }) {
                       </span>
                       <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{partner.category}</span>
                     </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      {partner.city} · {partner.items?.length ?? 0} items
-                      <span className="ml-2 text-muted-foreground/40">Portal: /business/{partner.portal_slug}</span>
+                    <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 mt-0.5">
+                      <span className="text-xs text-muted-foreground">{partner.city} · {partner.items?.length ?? 0} items</span>
+                      <a
+                        href={`/business/${partner.portal_slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary/70 hover:text-primary underline decoration-dotted transition-colors"
+                      >
+                        Portal ↗
+                      </a>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${partner.has_password ? "bg-amber-50 text-amber-600" : "bg-muted text-muted-foreground"}`}>
+                        {partner.has_password ? "🔐 Protected" : "🔓 Public"}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -914,6 +946,51 @@ function PartnersTab({ showToast }: { showToast: (msg: string) => void }) {
 
                 {isOpen && (
                   <div className="px-5 py-4" style={{ borderTop: "1px solid hsl(var(--border))", background: "hsl(var(--muted) / 0.35)" }}>
+
+                    {/* Portal Access */}
+                    <div className="mb-5 bg-card rounded-xl border border-border p-4">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-0.5">Portal Access</p>
+                          <p className="text-xs text-muted-foreground">
+                            {partner.has_password
+                              ? "Password-protected — only partners with credentials can login"
+                              : "Public — anyone with the link can access"}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => { setPasswordFor(passwordFor === partner.id ? null : partner.id); setNewPassword(""); }}
+                          className="text-xs px-3 py-1.5 border border-border rounded-full text-muted-foreground hover:border-primary/40 transition-colors flex-shrink-0"
+                        >
+                          {partner.has_password ? "Change / Remove Password" : "Set Password"}
+                        </button>
+                      </div>
+
+                      {passwordFor === partner.id && (
+                        <form onSubmit={e => handleSetPassword(e, partner.id)} className="mt-3 flex gap-2 flex-wrap">
+                          <input
+                            type="password"
+                            value={newPassword}
+                            onChange={e => setNewPassword(e.target.value)}
+                            placeholder={partner.has_password ? "New password (blank to remove)" : "Min. 6 characters"}
+                            autoFocus
+                            className={`${INPUT_CLS} flex-1 min-w-[180px]`}
+                          />
+                          <button
+                            type="submit"
+                            disabled={settingPassword || (!partner.has_password && newPassword.length > 0 && newPassword.length < 6)}
+                            className="px-4 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-xs font-bold transition-all disabled:opacity-50 flex-shrink-0"
+                          >
+                            {settingPassword ? "Saving..." : newPassword ? "Save Password" : "Remove Password"}
+                          </button>
+                          <button type="button" onClick={() => setPasswordFor(null)}
+                            className="px-4 py-2 border border-border text-muted-foreground rounded-full text-xs transition-colors">
+                            Cancel
+                          </button>
+                        </form>
+                      )}
+                    </div>
+
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Redeemable Items</p>
                       <button onClick={() => setAddingItemFor(addingItemFor === partner.id ? null : partner.id)}

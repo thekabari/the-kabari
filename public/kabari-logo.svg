@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 72" width="240" height="72" role="img" aria-label="theKabari — Recycling service Pakistan">
+  <title>theKabari</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@700&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Recycling symbol circle -->
+  <circle cx="36" cy="36" r="32" fill="#003c1e"/>
+  <text x="36" y="52" font-size="38" text-anchor="middle"
+        font-family="'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',sans-serif"
+        fill="#0f963c">&#x267B;</text>
+
+  <!-- کباڑی Urdu text -->
+  <text x="82" y="52" font-size="42" font-weight="900" text-anchor="start"
+        font-family="'Noto Nastaliq Urdu','Jameel Noori Nastaleeq','Alvi Nastaleeq',serif"
+        fill="#0f963c" direction="rtl" unicode-bidi="bidi-override">&#x06A9;&#x0628;&#x0627;&#x0691;&#x06CC;</text>
+</svg>

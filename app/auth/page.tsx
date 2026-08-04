@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { LogoMark } from "@/app/components/LogoMark";
 
 export default function AuthPage() {
   return (
@@ -75,7 +76,7 @@ function AuthForm() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-6 transition-colors">
       <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm p-8 w-full max-w-sm">
-        <div className="text-2xl font-black text-green-900 dark:text-green-400 tracking-tight mb-6">theKabari ♻️</div>
+        <div className="flex justify-center mb-6"><LogoMark size={36} /></div>
 
         {/* Tabs */}
         <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 gap-1 mb-6">
