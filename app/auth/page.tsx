@@ -101,7 +101,7 @@ function AuthForm() {
         {tab === "login" ? (
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <h2 className="text-xl font-black mb-1 text-gray-900 dark:text-white">Wapis aao! 👋</h2>
+              <h2 className="text-xl font-black mb-1 text-gray-900 dark:text-white">Wapis aao!</h2>
               <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">Apne account mein login karo.</p>
             </div>
             <div>
@@ -126,7 +126,7 @@ function AuthForm() {
         ) : (
           <form onSubmit={handleSignup} className="space-y-3">
             <div>
-              <h2 className="text-xl font-black mb-1 text-gray-900 dark:text-white">Shuru karo! ♻️</h2>
+              <h2 className="text-xl font-black mb-1 text-gray-900 dark:text-white">Shuru karo!</h2>
               <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">Free account banao aur XP earn karna shuru karo.</p>
             </div>
             <div>

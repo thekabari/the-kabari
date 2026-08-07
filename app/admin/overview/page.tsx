@@ -2,7 +2,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Profile, Pickup } from "@/types";
-import { getLevel, formatDate, SCRAP_EMOJI } from "@/lib/utils";
+import { getLevel, formatDate } from "@/lib/utils";
+import { ScrapIcon } from "@/lib/scrapIcons";
+import {
+  ArrowPathIcon, UsersIcon, ClockIcon, ArchiveBoxIcon,
+} from "@heroicons/react/24/outline";
 
 export default function OverviewPage() {
   const router = useRouter();
@@ -23,17 +27,17 @@ export default function OverviewPage() {
     });
   }, [router]);
 
-  if (loading) return <div className="py-20 text-center"><div className="text-4xl animate-spin">♻️</div></div>;
+  if (loading) return <div className="py-20 text-center"><ArrowPathIcon className="size-8 mx-auto animate-spin text-muted-foreground" /></div>;
 
   const approved  = profiles.filter(p => p.status === "approved" && p.role === "user");
   const pending   = profiles.filter(p => p.status === "pending"  && p.role === "user");
   const totalKg   = approved.reduce((a, u) => a + Number(u.total_kg), 0);
 
   const kpis = [
-    { label: "Approved Users",    value: String(approved.length),       icon: "👥", chip: "bg-accent" },
-    { label: "Pending Approvals", value: String(pending.length),        icon: "⏳", chip: "bg-amber-50 dark:bg-amber-950/30" },
-    { label: "Total kg Collected",value: `${totalKg.toFixed(0)} kg`,   icon: "♻️", chip: "bg-sky-50 dark:bg-sky-950/30" },
-    { label: "Total Pickups",     value: String(pickups.length),        icon: "📦", chip: "bg-emerald-50 dark:bg-emerald-950/30" },
+    { label: "Approved Users",    value: String(approved.length),       icon: UsersIcon,      chip: "bg-accent" },
+    { label: "Pending Approvals", value: String(pending.length),        icon: ClockIcon,      chip: "bg-amber-50 dark:bg-amber-950/30" },
+    { label: "Total kg Collected",value: `${totalKg.toFixed(0)} kg`,    icon: ArrowPathIcon,  chip: "bg-sky-50 dark:bg-sky-950/30" },
+    { label: "Total Pickups",     value: String(pickups.length),        icon: ArchiveBoxIcon, chip: "bg-emerald-50 dark:bg-emerald-950/30" },
   ];
 
   return (
@@ -48,7 +52,7 @@ export default function OverviewPage() {
           <div key={k.label} className="rounded-xl border border-border bg-card shadow-card px-4 py-4 hover:shadow-elevated transition-all">
             <div className="flex items-start justify-between mb-3">
               <p className="text-xs text-muted-foreground">{k.label}</p>
-              <div className={`size-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 ${k.chip}`}>{k.icon}</div>
+              <div className={`size-8 rounded-lg flex items-center justify-center flex-shrink-0 ${k.chip}`}><k.icon className="size-4" /></div>
             </div>
             <div className="text-2xl font-bold tabular-nums leading-none">{k.value}</div>
           </div>
@@ -65,7 +69,7 @@ export default function OverviewPage() {
           <div className="divide-y divide-border">
             {pickups.slice(0, 10).map(p => (
               <div key={p.id} className="flex items-center gap-3 px-5 py-3 hover:bg-muted/40 transition-colors">
-                <span className="text-lg flex-shrink-0">{SCRAP_EMOJI[p.type] || "♻️"}</span>
+                <ScrapIcon type={p.type} className="size-4 flex-shrink-0 text-muted-foreground" />
                 <div className="flex-1 min-w-0">
                   <span className="font-semibold text-sm">{p.user_name}</span>
                   <span className="text-muted-foreground text-sm"> · {p.type} · {p.kg} kg</span>

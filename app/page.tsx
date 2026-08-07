@@ -3,7 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { LogoMark } from "./components/LogoMark";
+import { ScrapIcon } from "@/lib/scrapIcons";
 import { motion, useInView, AnimatePresence, useMotionValue, animate, useTransform, type Variants } from "framer-motion";
+import {
+  BuildingOfficeIcon, TrophyIcon, ArchiveBoxIcon, GiftIcon, ArrowTrendingUpIcon,
+  BanknotesIcon, TagIcon, ArrowPathIcon, LockClosedIcon,
+  CheckCircleIcon, ShoppingBagIcon, DocumentCheckIcon, TicketIcon, StarIcon,
+  ChartBarIcon, DocumentTextIcon, UserIcon, BuildingOffice2Icon,
+} from "@heroicons/react/24/outline";
 
 /* ── Easing & spring ────────────────────────────── */
 const EASE  = [0.16, 1, 0.3, 1] as const;
@@ -145,12 +152,12 @@ export default function HomePage() {
             >
               <a href="#how" onClick={() => setMenuOpen(false)} className="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors">How it works</a>
               <a href="#services" onClick={() => setMenuOpen(false)} className="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors">Services</a>
-              <a href="#corporate" onClick={() => setMenuOpen(false)} className="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors">🏢 For Business</a>
-              <Link href="/leaderboard" onClick={() => setMenuOpen(false)} className="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors">🏆 Leaderboard</Link>
+              <a href="#corporate" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors"><BuildingOfficeIcon className="size-4" /> For Business</a>
+              <Link href="/leaderboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors"><TrophyIcon className="size-4" /> Leaderboard</Link>
               <Link href="/auth" onClick={() => setMenuOpen(false)} className="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950 rounded-xl transition-colors sm:hidden">Login</Link>
               <div className="pt-2 mt-1 border-t border-gray-100 dark:border-gray-800">
-                <Link href="/pickup" onClick={() => setMenuOpen(false)} className="block w-full text-center px-4 py-3 bg-green-400 text-white text-sm font-bold rounded-xl hover:bg-green-900 transition-colors">
-                  📦 Pickup Schedule Karo
+                <Link href="/pickup" onClick={() => setMenuOpen(false)} className="flex items-center justify-center gap-2 w-full text-center px-4 py-3 bg-green-400 text-white text-sm font-bold rounded-xl hover:bg-green-900 transition-colors">
+                  <ArchiveBoxIcon className="size-4" /> Pickup Schedule Karo
                 </Link>
               </div>
             </motion.div>
@@ -272,9 +279,9 @@ export default function HomePage() {
                   <p className="text-[11px] font-bold text-white">Karachi Clean Drive</p>
                   <p className="text-[9px] text-white/30">6 / 10 kg plastic</p>
                 </div>
-                {[["📄","Paper","+4 XP/kg"],["🧴","Plastic","+5 XP/kg"],["🔩","Metal","+8 XP/kg"]].map(([e,n,x]) => (
+                {[["Paper","+4 XP/kg"],["Plastic","+5 XP/kg"],["Metal","+8 XP/kg"]].map(([n,x]) => (
                   <div key={n} className="flex items-center gap-2 bg-white/[0.03] rounded-lg px-2 py-1.5 mb-1.5">
-                    <span className="text-xs">{e}</span>
+                    <ScrapIcon type={n} className="size-3.5 text-white/60" />
                     <span className="text-[10px] text-white/60 flex-1">{n}</span>
                     <span className="text-[9px] font-bold text-green-400">{x}</span>
                   </div>
@@ -526,7 +533,7 @@ export default function HomePage() {
                 step: "Pehli Pickup",
                 tag: "Instant Reward",
                 tagColor: "bg-green-400 text-white",
-                icon: "🎁",
+                icon: GiftIcon,
                 title: "Seedha milta hai",
                 desc: "Pehli pickup ke baad hum turant aapko reward karte hain — koi threshold nahi, koi wait nahi.",
                 glow: true,
@@ -535,7 +542,7 @@ export default function HomePage() {
                 step: "Har Pickup",
                 tag: "Balance Builds",
                 tagColor: "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400",
-                icon: "📈",
+                icon: ArrowTrendingUpIcon,
                 title: "Balance accumulate hota hai",
                 desc: "Har pickup ke baad aapka balance badhta rehta hai. Scrap ka weight aur type se rate decide hota hai.",
                 glow: false,
@@ -544,7 +551,7 @@ export default function HomePage() {
                 step: "Rs. 3,000+",
                 tag: "Redeem Now",
                 tagColor: "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400",
-                icon: "💰",
+                icon: BanknotesIcon,
                 title: "Cash ya Easypaisa",
                 desc: "Balance Rs. 3,000 par pohonch jaye — Easypaisa ya cash pe redeem kar lo. Koi expiry nahi.",
                 glow: false,
@@ -553,7 +560,7 @@ export default function HomePage() {
                 step: "Kabhi Bhi",
                 tag: "Always Available",
                 tagColor: "bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400",
-                icon: "🏷️",
+                icon: TagIcon,
                 title: "Partner Discounts",
                 desc: "Balance se hata ke — partner cafes, shops aur brands pe discounts balance ke bina bhi milte hain.",
                 glow: false,
@@ -576,7 +583,7 @@ export default function HomePage() {
                 )}
                 <div className="relative flex items-start justify-between">
                   <span className={`text-xs font-bold px-3 py-1 rounded-full ${r.tagColor}`}>{r.tag}</span>
-                  <span className="text-2xl">{r.icon}</span>
+                  <r.icon className={`size-6 ${r.glow ? "text-white" : "text-gray-400"}`} />
                 </div>
                 <div className="relative">
                   <div className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${r.glow ? "text-white/40" : "text-gray-400 dark:text-gray-600"}`}>{r.step}</div>
@@ -599,18 +606,18 @@ export default function HomePage() {
             >Aur bhi milta hai</motion.p>
             <InView variants={staggerFast(0, 0.09)} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
               {[
-                { icon: "☕", label: "Cafe Discounts",     desc: "Partner cafes pe 10–20% off" },
-                { icon: "🛍️", label: "Shop Vouchers",     desc: "Partner brands pe redeem karo" },
-                { icon: "🏆", label: "XP & Badges",       desc: "Leaderboard pe rank badhao" },
-                { icon: "♻️", label: "Eco Certificate",   desc: "Monthly recycling certificate" },
-                { icon: "🎟️", label: "Lucky Draws",       desc: "Har mahine prize lucky draw" },
-                { icon: "👑", label: "VIP Pickups",       desc: "Priority scheduling milta hai" },
+                { icon: TagIcon,           label: "Cafe Discounts",     desc: "Partner cafes pe 10–20% off" },
+                { icon: ShoppingBagIcon,   label: "Shop Vouchers",     desc: "Partner brands pe redeem karo" },
+                { icon: TrophyIcon,        label: "XP & Badges",       desc: "Leaderboard pe rank badhao" },
+                { icon: DocumentCheckIcon, label: "Eco Certificate",   desc: "Monthly recycling certificate" },
+                { icon: TicketIcon,        label: "Lucky Draws",       desc: "Har mahine prize lucky draw" },
+                { icon: StarIcon,          label: "VIP Pickups",       desc: "Priority scheduling milta hai" },
               ].map(p => (
                 <motion.div key={p.label} variants={cardReveal}
                   whileHover={{ y: -6, scale: 1.04, transition: { ease: "easeOut", duration: 0.15 } }}
                   className="bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 text-center cursor-default"
                 >
-                  <div className="text-2xl mb-2">{p.icon}</div>
+                  <p.icon className="size-6 mx-auto mb-2 text-green-500" />
                   <div className="text-xs font-bold text-gray-900 dark:text-white mb-1">{p.label}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{p.desc}</div>
                 </motion.div>
@@ -699,12 +706,12 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <InView variants={staggerFast(0, 0.08)} className="grid grid-cols-2 gap-3">
               {[
-                { icon: "🔄", title: "Recurring Pickups", desc: "Weekly or monthly scheduled collections — set it and forget it." },
-                { icon: "📊", title: "ESG Reports", desc: "Monthly PDF reports: tonnage, CO₂ offset, material breakdown." },
-                { icon: "🧾", title: "Digital Invoicing", desc: "GST-ready invoices auto-generated after every pickup." },
-                { icon: "👔", title: "Dedicated Manager", desc: "A single point of contact for your account, always." },
-                { icon: "🏭", title: "Bulk Pricing", desc: "Volume-based rates — the more you recycle, the more you earn." },
-                { icon: "🔒", title: "Secure Disposal", desc: "Certified shredding for confidential documents and e-waste." },
+                { icon: ArrowPathIcon, title: "Recurring Pickups", desc: "Weekly or monthly scheduled collections — set it and forget it." },
+                { icon: ChartBarIcon, title: "ESG Reports", desc: "Monthly PDF reports: tonnage, CO₂ offset, material breakdown." },
+                { icon: DocumentTextIcon, title: "Digital Invoicing", desc: "GST-ready invoices auto-generated after every pickup." },
+                { icon: UserIcon, title: "Dedicated Manager", desc: "A single point of contact for your account, always." },
+                { icon: BuildingOffice2Icon, title: "Bulk Pricing", desc: "Volume-based rates — the more you recycle, the more you earn." },
+                { icon: LockClosedIcon, title: "Secure Disposal", desc: "Certified shredding for confidential documents and e-waste." },
               ].map(f => (
                 <motion.div key={f.title} variants={cardReveal}
                   whileHover={{ y: -10, scale: 1.04, backgroundColor: "rgba(255,255,255,0.09)", borderColor: "rgba(74,222,128,0.35)", boxShadow: "0 16px 40px -8px rgba(34,197,94,0.2)", transition: { ease: "easeOut", duration: 0.18 } }}
@@ -713,8 +720,8 @@ export default function HomePage() {
                   <motion.div
                     whileHover={{ scale: 1.4, rotate: -10 }}
                     transition={{ type: "spring", stiffness: 400, damping: 14 }}
-                    className="text-2xl mb-2 inline-block"
-                  >{f.icon}</motion.div>
+                    className="mb-2 inline-block text-green-400"
+                  ><f.icon className="size-6" /></motion.div>
                   <h4 className="text-white text-sm font-bold mb-1 group-hover:text-green-400 transition-colors">{f.title}</h4>
                   <p className="text-white/65 text-sm leading-relaxed">{f.desc}</p>
                 </motion.div>
@@ -731,8 +738,8 @@ export default function HomePage() {
                 <motion.div
                   animate={{ rotate: [0, -8, 8, 0], scale: [1, 1.1, 1] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                  className="w-10 h-10 bg-green-400/15 rounded-2xl flex items-center justify-center text-xl mb-4 inline-flex"
-                >🏢</motion.div>
+                  className="w-10 h-10 bg-green-400/15 rounded-2xl flex items-center justify-center text-green-400 mb-4 inline-flex"
+                ><BuildingOfficeIcon className="size-5" /></motion.div>
                 <h3 className="text-white text-xl font-black mb-2">Partner karo theKabari se</h3>
                 <p className="text-white/65 text-sm leading-relaxed">
                   Form bharo — aapka dedicated account manager 48 ghante mein contact karega.
@@ -994,8 +1001,8 @@ function CorporateForm() {
             initial={{ scale: 0, rotate: -30 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
-            className="w-14 h-14 bg-green-400/15 rounded-full flex items-center justify-center text-2xl mb-4"
-          >✅</motion.div>
+            className="w-14 h-14 bg-green-400/15 rounded-full flex items-center justify-center text-green-400 mb-4"
+          ><CheckCircleIcon className="size-8" /></motion.div>
           <h4 className="text-white font-black text-lg mb-2">Request mil gayi!</h4>
           <p className="text-white/40 text-sm">Aapka manager 48 ghante mein contact karega.</p>
         </motion.div>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Profile } from "@/types";
+import { ArrowPathIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
 interface ScrapRate { slug: string; name: string; emoji: string; rate_pkr: number; }
 
@@ -76,10 +77,10 @@ export default function AddXPPage() {
     if (!res.ok) { setError(data.error || "Failed"); setSubmitting(false); return; }
     setUserId(""); setKg(""); setCash(""); setNote("");
     setSubmitting(false);
-    showToast("Pickup record ho gaya! ✓");
+    showToast("Pickup record ho gaya!");
   }
 
-  if (loading) return <div className="py-20 text-center"><div className="text-4xl animate-spin">♻️</div></div>;
+  if (loading) return <div className="py-20 text-center"><ArrowPathIcon className="size-8 mx-auto animate-spin text-muted-foreground" /></div>;
 
   return (
     <div className="space-y-5">
@@ -125,14 +126,14 @@ export default function AddXPPage() {
             <input type="text" value={note} onChange={e => setNote(e.target.value)} placeholder="e.g. Ghar se pickup, Gulshan" className={INPUT_CLS} />
           </div>
           {(kg || cash) && (
-            <div className="bg-accent/60 border border-primary/20 rounded-xl px-4 py-3 text-sm text-accent-foreground font-semibold">
+            <div className="bg-accent/60 border border-primary/20 rounded-xl px-4 py-3 text-sm text-accent-foreground font-semibold flex items-center gap-1.5">
               {kg && rateDisplay > 0 && <span>{kg} kg × Rs. {rateDisplay}/kg = Rs. {Math.round(parseFloat(kg) * rateDisplay)} → </span>}
-              {xpPreview > 0 ? <span>+{xpPreview} XP milega 🎉</span> : <span>Cash enter karo XP preview ke liye</span>}
+              {xpPreview > 0 ? <span className="flex items-center gap-1">+{xpPreview} XP milega <SparklesIcon className="size-4" /></span> : <span>Cash enter karo XP preview ke liye</span>}
             </div>
           )}
           <button type="submit" disabled={submitting}
             className="w-full bg-primary hover:opacity-90 text-primary-foreground py-3 rounded-full font-bold text-sm transition-all disabled:opacity-60">
-            {submitting ? "Recording..." : "Pickup Record Karo ✓"}
+            {submitting ? "Recording..." : "Pickup Record Karo"}
           </button>
         </form>
       </div>

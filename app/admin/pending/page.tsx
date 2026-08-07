@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Profile } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { ArrowPathIcon, CheckCircleIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function PendingPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function PendingPage() {
 
   async function approve(id: string) {
     await fetch("/api/admin/approve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: id }) });
-    showToast("User approve ho gaya! ✓");
+    showToast("User approve ho gaya!");
     load();
   }
 
@@ -35,7 +36,7 @@ export default function PendingPage() {
     load();
   }
 
-  if (loading) return <div className="py-20 text-center"><div className="text-4xl animate-spin">♻️</div></div>;
+  if (loading) return <div className="py-20 text-center"><ArrowPathIcon className="size-8 mx-auto animate-spin text-muted-foreground" /></div>;
 
   return (
     <div className="space-y-5">
@@ -51,7 +52,7 @@ export default function PendingPage() {
       <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden">
         {pending.length === 0 ? (
           <div className="py-16 text-center">
-            <div className="text-4xl mb-3">✅</div>
+            <CheckCircleIcon className="size-10 mx-auto mb-3 text-muted-foreground" />
             <p className="text-muted-foreground text-sm">Koi pending request nahi</p>
           </div>
         ) : (
@@ -67,12 +68,12 @@ export default function PendingPage() {
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
                   <button onClick={() => approve(u.id)}
-                    className="px-4 py-2 bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground rounded-full text-xs font-bold transition-colors">
-                    ✓ Approve
+                    className="flex items-center gap-1.5 px-4 py-2 bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground rounded-full text-xs font-bold transition-colors">
+                    <CheckIcon className="size-3.5" /> Approve
                   </button>
                   <button onClick={() => reject(u.id)}
-                    className="px-4 py-2 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-full text-xs font-bold transition-colors">
-                    ✗ Reject
+                    className="flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-full text-xs font-bold transition-colors">
+                    <XMarkIcon className="size-3.5" /> Reject
                   </button>
                 </div>
               </div>

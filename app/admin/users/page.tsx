@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Profile } from "@/types";
 import { getLevel } from "@/lib/utils";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function UsersPage() {
     });
   }, [router]);
 
-  if (loading) return <div className="py-20 text-center"><div className="text-4xl animate-spin">♻️</div></div>;
+  if (loading) return <div className="py-20 text-center"><ArrowPathIcon className="size-8 mx-auto animate-spin text-muted-foreground" /></div>;
 
   const sorted = [...approved].sort((a, b) => b.xp - a.xp);
 

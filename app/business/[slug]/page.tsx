@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import {
+  LockClosedIcon, MagnifyingGlassIcon, ArrowPathIcon, CheckCircleIcon,
+  CheckIcon, ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 interface PartnerInfo {
   id: string;
@@ -72,7 +76,7 @@ function LoginScreen({
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 w-full max-w-sm">
           <div className="text-center mb-6">
-            <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">🔐</div>
+            <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-3"><LockClosedIcon className="size-6 text-green-700" /></div>
             <h2 className="text-lg font-black">Partner Login</h2>
             <p className="text-gray-500 text-sm mt-1">Enter your portal password to continue</p>
           </div>
@@ -208,7 +212,7 @@ export default function BusinessPortalPage() {
     if (notFound) return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
         <div className="text-center max-w-sm">
-          <div className="text-5xl mb-4">🔍</div>
+          <MagnifyingGlassIcon className="size-12 mx-auto mb-4 text-gray-300" />
           <h1 className="text-2xl font-black mb-2">Portal Not Found</h1>
           <p className="text-gray-500 text-sm">This business portal link is invalid or has been removed.</p>
         </div>
@@ -216,7 +220,7 @@ export default function BusinessPortalPage() {
     );
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-3xl animate-spin">♻️</div>
+        <ArrowPathIcon className="size-8 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -240,7 +244,7 @@ export default function BusinessPortalPage() {
 
   if (!authChecked) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-3xl animate-spin">♻️</div>
+      <ArrowPathIcon className="size-8 animate-spin text-gray-400" />
     </div>
   );
 
@@ -300,7 +304,11 @@ export default function BusinessPortalPage() {
               coupon.status === "active" ? "bg-green-50 text-green-600" :
               coupon.status === "used" ? "bg-gray-100 text-gray-500" : "bg-red-50 text-red-500"
             }`}>
-              {coupon.status === "active" ? "✅ Valid" : coupon.status === "used" ? "✓ Already Used" : "⚠️ Expired"}
+              {coupon.status === "active"
+                ? <><CheckCircleIcon className="size-3.5" /> Valid</>
+                : coupon.status === "used"
+                ? <><CheckIcon className="size-3.5" /> Already Used</>
+                : <><ExclamationTriangleIcon className="size-3.5" /> Expired</>}
             </div>
 
             <div className="mb-4">
@@ -341,14 +349,14 @@ export default function BusinessPortalPage() {
                   disabled={marking}
                   className="w-full bg-green-400 hover:bg-green-900 text-white py-3 rounded-full font-bold text-sm transition-colors disabled:opacity-50"
                 >
-                  {marking ? "Recording..." : "✓ Mark as Used — Record Sale"}
+                  {marking ? "Recording..." : <span className="inline-flex items-center gap-1.5"><CheckIcon className="size-4" /> Mark as Used — Record Sale</span>}
                 </button>
               </>
             )}
 
             {(coupon.status === "used" || markDone) && (
-              <div className="text-center py-2 text-green-600 font-bold text-sm">
-                ✅ Sale recorded successfully
+              <div className="flex items-center justify-center gap-1.5 py-2 text-green-600 font-bold text-sm">
+                <CheckCircleIcon className="size-4" /> Sale recorded successfully
               </div>
             )}
           </div>

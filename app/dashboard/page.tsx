@@ -5,18 +5,26 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Profile, Pickup, Order, Partner, PartnerItem, Coupon } from "@/types";
 import {
   getLevel, getLevelName, getLevelProgress, getNextLevelXP,
-  formatDate, SCRAP_EMOJI, itemPointsCost,
+  formatDate, itemPointsCost,
 } from "@/lib/utils";
+import { ScrapIcon } from "@/lib/scrapIcons";
 import Link from "next/link";
 import { LogoMark } from "@/app/components/LogoMark";
+import {
+  ChartBarIcon, ArchiveBoxIcon, GiftIcon, TrophyIcon, ArrowPathIcon,
+  BoltIcon, TicketIcon, BanknotesIcon, ClockIcon, TruckIcon,
+  CheckCircleIcon, XCircleIcon,
+  BuildingStorefrontIcon, ChevronUpIcon, ChevronDownIcon,
+  ArrowLeftStartOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 
 type Tab = "overview" | "pickups" | "rewards" | "levelup";
 
-const NAV: { id: Tab; label: string; icon: string }[] = [
-  { id: "overview", label: "Overview",        icon: "📊" },
-  { id: "pickups",  label: "My Pickups",      icon: "📦" },
-  { id: "rewards",  label: "Partner Rewards", icon: "🎁" },
-  { id: "levelup",  label: "Level Up",        icon: "🏅" },
+const NAV: { id: Tab; label: string; icon: typeof ChartBarIcon }[] = [
+  { id: "overview", label: "Overview",        icon: ChartBarIcon },
+  { id: "pickups",  label: "My Pickups",      icon: ArchiveBoxIcon },
+  { id: "rewards",  label: "Partner Rewards", icon: GiftIcon },
+  { id: "levelup",  label: "Level Up",        icon: TrophyIcon },
 ];
 
 const LEVELS: [number, string, number][] = [
@@ -36,11 +44,23 @@ const STATUS_CHIP: Record<string, string> = {
   cancelled:  "bg-red-50 text-red-500",
 };
 const STATUS_LABEL: Record<string, string> = {
-  pending:    "⏳ Pending",
-  dispatched: "🚚 On the way",
-  completed:  "✅ Completed",
-  cancelled:  "❌ Cancelled",
+  pending:    "Pending",
+  dispatched: "On the way",
+  completed:  "Completed",
+  cancelled:  "Cancelled",
 };
+const STATUS_ICON: Record<string, typeof ClockIcon> = {
+  pending: ClockIcon, dispatched: TruckIcon, completed: CheckCircleIcon, cancelled: XCircleIcon,
+};
+
+function StatusBadge({ status }: { status: string }) {
+  const Icon = STATUS_ICON[status] ?? ClockIcon;
+  return (
+    <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_CHIP[status] ?? STATUS_CHIP.pending}`}>
+      <Icon className="size-3" /> {STATUS_LABEL[status] ?? status}
+    </span>
+  );
+}
 
 export default function DashboardPage() {
   return <Suspense><Dashboard /></Suspense>;
@@ -162,7 +182,7 @@ function Dashboard() {
               {tab === item.id && (
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-amber-400 rounded-r" />
               )}
-              <span className="text-base w-5 text-center flex-shrink-0">{item.icon}</span>
+              <item.icon className="size-5 flex-shrink-0" />
               <span>{item.label}</span>
             </button>
           ))}
@@ -172,18 +192,16 @@ function Dashboard() {
         <div className="px-3 py-4 flex-shrink-0 space-y-0.5" style={{ borderTop: "1px solid rgba(255,255,255,0.10)" }}>
           <Link
             href="/leaderboard"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-            style={{ color: "rgba(255,255,255,0.52)" }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition-all"
           >
-            <span className="text-base w-5 text-center flex-shrink-0">🏆</span>
+            <TrophyIcon className="size-5 flex-shrink-0" />
             <span>Leaderboard</span>
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-            style={{ color: "rgba(255,255,255,0.38)" }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/40 hover:bg-white/5 hover:text-white transition-all"
           >
-            <span className="text-base w-5 text-center flex-shrink-0">↩</span>
+            <ArrowLeftStartOnRectangleIcon className="size-5 flex-shrink-0" />
             <span>Logout</span>
           </button>
         </div>
@@ -206,8 +224,8 @@ function Dashboard() {
         {/* Desktop page header */}
         <header className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between px-7 flex-shrink-0"
           style={{ borderBottom: "1px solid hsl(var(--border))", background: "hsl(var(--background) / 0.85)", backdropFilter: "blur(12px)" }}>
-          <h1 className="font-semibold text-sm tracking-tight">
-            {activeNav.icon} {activeNav.label}
+          <h1 className="font-semibold text-sm tracking-tight flex items-center gap-2">
+            <activeNav.icon className="size-4" /> {activeNav.label}
           </h1>
           <Link href="/pickup" className="bg-primary text-primary-foreground text-xs font-bold px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
             + Schedule Pickup
@@ -247,17 +265,17 @@ function Dashboard() {
           <button
             key={item.id}
             onClick={() => setTab(item.id)}
-            className="flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-medium transition-colors"
-            style={{ color: tab === item.id ? "#f0a500" : "rgba(255,255,255,0.42)" }}
+            className={`flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-medium transition-colors ${
+              tab === item.id ? "text-[#f0a500]" : "text-white/40 hover:text-white/70"
+            }`}
           >
-            <span className="text-lg leading-none">{item.icon}</span>
+            <item.icon className="size-5" />
             <span>{item.label.split(" ")[0]}</span>
           </button>
         ))}
         <Link href="/leaderboard"
-          className="flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-medium"
-          style={{ color: "rgba(255,255,255,0.42)" }}>
-          <span className="text-lg leading-none">🏆</span>
+          className="flex-1 flex flex-col items-center py-2 gap-0.5 text-[10px] font-medium text-white/40 hover:text-white/70 transition-colors">
+          <TrophyIcon className="size-5" />
           <span>Ranks</span>
         </Link>
       </nav>
@@ -275,10 +293,10 @@ function OverviewTab({
   onTabSwitch: (t: Tab) => void;
 }) {
   const kpis = [
-    { label: "Total XP",    value: profile.xp.toLocaleString(),         sub: "Lifetime earned",   icon: "⚡", chip: "bg-accent" },
-    { label: "Level",       value: String(lvl),                         sub: getLevelName(profile.xp), icon: "🏅", chip: "bg-amber-50" },
-    { label: "kg Recycled", value: Number(profile.total_kg).toFixed(1), sub: "Total weight",      icon: "♻️", chip: "bg-sky-50" },
-    { label: "Cash Earned", value: `Rs. ${profile.total_cash}`,         sub: "All pickups",        icon: "💵", chip: "bg-emerald-50" },
+    { label: "Total XP",    value: profile.xp.toLocaleString(),         sub: "Lifetime earned",   icon: BoltIcon,      chip: "bg-accent" },
+    { label: "Level",       value: String(lvl),                         sub: getLevelName(profile.xp), icon: TrophyIcon, chip: "bg-amber-50" },
+    { label: "kg Recycled", value: Number(profile.total_kg).toFixed(1), sub: "Total weight",      icon: ArrowPathIcon, chip: "bg-sky-50" },
+    { label: "Cash Earned", value: `Rs. ${profile.total_cash}`,         sub: "All pickups",        icon: BanknotesIcon, chip: "bg-emerald-50" },
   ];
 
   return (
@@ -289,7 +307,7 @@ function OverviewTab({
         <div className="absolute w-32 h-32 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.05)", bottom: "-1rem", left: "-1rem" }} />
         <div className="relative flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <p className="text-primary-foreground/60 text-sm">Salam, {profile.name} 👋</p>
+            <p className="text-primary-foreground/60 text-sm">Salam, {profile.name}</p>
             <h1 className="text-xl font-black tracking-tight mt-1">Level {lvl} — {getLevelName(profile.xp)}</h1>
             <div className="mt-4 space-y-1.5">
               <div className="flex justify-between text-xs text-primary-foreground/50">
@@ -314,8 +332,8 @@ function OverviewTab({
           <div key={k.label} className="rounded-xl border border-border bg-card shadow-card px-4 py-4 hover:shadow-elevated hover:border-primary/30 transition-all">
             <div className="flex items-start justify-between mb-3">
               <p className="text-xs text-muted-foreground">{k.label}</p>
-              <div className={`size-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 ${k.chip}`}>
-                {k.icon}
+              <div className={`size-8 rounded-lg flex items-center justify-center flex-shrink-0 ${k.chip}`}>
+                <k.icon className="size-4" />
               </div>
             </div>
             <div className="text-2xl font-bold tabular-nums leading-none">{k.value}</div>
@@ -335,7 +353,7 @@ function OverviewTab({
           </div>
           {orders.length === 0 ? (
             <div className="py-8 text-center px-4">
-              <div className="text-3xl mb-2">📦</div>
+              <ArchiveBoxIcon className="size-8 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground mb-3">No pickup requests yet</p>
               <Link href="/pickup" className="inline-block bg-primary text-primary-foreground text-xs font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
                 + Schedule Pickup
@@ -348,9 +366,7 @@ function OverviewTab({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-medium truncate max-w-[120px]">{o.trash_types.join(", ")}</span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_CHIP[o.status] ?? STATUS_CHIP.pending}`}>
-                        {STATUS_LABEL[o.status] ?? o.status}
-                      </span>
+                      <StatusBadge status={o.status} />
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5 truncate">{o.address}</div>
                   </div>
@@ -376,15 +392,15 @@ function OverviewTab({
           </div>
           {pickups.length === 0 ? (
             <div className="py-8 text-center px-4">
-              <div className="text-3xl mb-2">♻️</div>
+              <ArrowPathIcon className="size-8 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">No pickups recorded yet</p>
             </div>
           ) : (
             <div className="divide-y divide-border">
               {pickups.slice(0, 4).map(p => (
                 <div key={p.id} className="flex items-center gap-3 px-5 py-3 hover:bg-muted/40 transition-colors">
-                  <div className="size-8 bg-accent rounded-lg flex items-center justify-center text-base flex-shrink-0">
-                    {SCRAP_EMOJI[p.type] || "♻️"}
+                  <div className="size-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                    <ScrapIcon type={p.type} className="size-4" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium">{p.type} — {p.kg} kg</div>
@@ -418,7 +434,7 @@ function PickupsTab({ orders, pickups }: { orders: Order[]; pickups: Pickup[] })
         </div>
         {orders.length === 0 ? (
           <div className="py-12 text-center px-4">
-            <div className="text-4xl mb-3">📦</div>
+            <ArchiveBoxIcon className="size-10 mx-auto mb-3 text-muted-foreground" />
             <p className="text-muted-foreground text-sm mb-4">Koi pickup request nahi abhi.</p>
             <Link href="/pickup" className="inline-block bg-primary text-primary-foreground px-6 py-2.5 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity">
               Pehla Pickup Schedule Karo →
@@ -431,9 +447,7 @@ function PickupsTab({ orders, pickups }: { orders: Order[]; pickups: Pickup[] })
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-semibold">{o.trash_types.join(", ")}</span>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_CHIP[o.status] ?? STATUS_CHIP.pending}`}>
-                      {STATUS_LABEL[o.status] ?? o.status}
-                    </span>
+                    <StatusBadge status={o.status} />
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">{o.address}</div>
                   {o.notes && <div className="text-xs text-muted-foreground mt-0.5 italic">{o.notes}</div>}
@@ -459,15 +473,15 @@ function PickupsTab({ orders, pickups }: { orders: Order[]; pickups: Pickup[] })
         </div>
         {pickups.length === 0 ? (
           <div className="py-12 text-center px-4">
-            <div className="text-4xl mb-3">♻️</div>
+            <ArrowPathIcon className="size-10 mx-auto mb-3 text-muted-foreground" />
             <p className="text-muted-foreground text-sm">Abhi tak koi pickup nahi.</p>
           </div>
         ) : (
           <div className="divide-y divide-border">
             {pickups.map(p => (
               <div key={p.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-muted/40 transition-colors">
-                <div className="size-10 bg-accent rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                  {SCRAP_EMOJI[p.type] || "♻️"}
+                <div className="size-10 bg-accent rounded-xl flex items-center justify-center flex-shrink-0">
+                  <ScrapIcon type={p.type} className="size-5" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-sm">{p.type} — {p.kg} kg</div>
@@ -510,24 +524,25 @@ function RewardsTab({
             <p className="text-xs text-muted-foreground">Available XP</p>
             <p className="text-2xl font-black tabular-nums text-primary">{profile.xp.toLocaleString()}</p>
           </div>
-          <div className="size-10 bg-accent rounded-xl flex items-center justify-center text-xl flex-shrink-0">⚡</div>
+          <div className="size-10 bg-accent rounded-xl flex items-center justify-center flex-shrink-0"><BoltIcon className="size-5" /></div>
         </div>
         <div className="rounded-xl border border-border bg-card shadow-card px-4 py-3.5 flex items-center justify-between">
           <div>
             <p className="text-xs text-muted-foreground">Active Coupons</p>
             <p className="text-2xl font-black tabular-nums">{activeCoupons}</p>
           </div>
-          <div className="size-10 bg-amber-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🎟️</div>
+          <div className="size-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0"><TicketIcon className="size-5" /></div>
         </div>
       </div>
 
       {redeemMsg && (
-        <div className={`rounded-xl px-4 py-3 text-sm font-medium border ${
+        <div className={`flex items-center gap-1.5 rounded-xl px-4 py-3 text-sm font-medium border ${
           redeemMsg.type === "ok"
             ? "bg-accent/50 text-accent-foreground border-primary/20"
             : "bg-red-50 text-red-600 border-red-100"
         }`}>
-          {redeemMsg.type === "ok" ? "✅ " : "❌ "}{redeemMsg.text}
+          {redeemMsg.type === "ok" ? <CheckCircleIcon className="size-4 flex-shrink-0" /> : <XCircleIcon className="size-4 flex-shrink-0" />}
+          {redeemMsg.text}
         </div>
       )}
 
@@ -539,7 +554,7 @@ function RewardsTab({
         </div>
         {partners.length === 0 ? (
           <div className="py-10 text-center px-4">
-            <div className="text-3xl mb-2">🏪</div>
+            <BuildingStorefrontIcon className="size-8 mx-auto mb-2 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Partner deals coming soon!</p>
           </div>
         ) : (
@@ -562,7 +577,7 @@ function RewardsTab({
                         {partner.items?.length || 0} deal{(partner.items?.length ?? 0) !== 1 ? "s" : ""}
                       </div>
                     </div>
-                    <span className="text-muted-foreground text-xs flex-shrink-0">{isOpen ? "▲" : "▼"}</span>
+                    {isOpen ? <ChevronUpIcon className="size-4 text-muted-foreground flex-shrink-0" /> : <ChevronDownIcon className="size-4 text-muted-foreground flex-shrink-0" />}
                   </button>
                   {isOpen && (
                     <div className="px-5 py-3 space-y-2.5" style={{ background: "hsl(var(--muted) / 0.35)", borderTop: "1px solid hsl(var(--border))" }}>
@@ -621,7 +636,7 @@ function RewardsTab({
                 <div key={c.id} className={`px-5 py-4 ${used || expired ? "opacity-50" : ""}`}>
                   <div className="flex items-start gap-3">
                     <div className="size-10 bg-accent rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                      {(c.partner as Partner & { emoji?: string })?.emoji || "🎁"}
+                      {(c.partner as Partner & { emoji?: string })?.emoji || <GiftIcon className="size-5" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -722,7 +737,7 @@ function LoadingScreen() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
-        <div className="text-4xl mb-4 animate-spin">♻️</div>
+        <ArrowPathIcon className="size-10 mx-auto mb-4 animate-spin text-muted-foreground" />
         <p className="text-muted-foreground text-sm">Loading...</p>
       </div>
     </div>
@@ -733,7 +748,7 @@ function PendingScreen({ onLogout }: { onLogout: () => void }) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="rounded-2xl border border-border bg-card shadow-card p-10 max-w-sm w-full text-center">
-        <div className="size-16 bg-amber-50 rounded-full flex items-center justify-center text-3xl mx-auto mb-5">⏳</div>
+        <div className="size-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-5"><ClockIcon className="size-8 text-amber-600" /></div>
         <h2 className="text-2xl font-black mb-2">Approval ka wait karo</h2>
         <p className="text-muted-foreground text-sm leading-relaxed mb-2">
           Aapka account register ho gaya! theKabari team aapko jald hi approve kar degi.
@@ -751,7 +766,7 @@ function RejectedScreen({ onLogout }: { onLogout: () => void }) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="rounded-2xl border border-border bg-card shadow-card p-10 max-w-sm w-full text-center">
-        <div className="size-16 bg-red-50 rounded-full flex items-center justify-center text-3xl mx-auto mb-5">❌</div>
+        <div className="size-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5"><XCircleIcon className="size-8 text-red-500" /></div>
         <h2 className="text-2xl font-black mb-2">Account Reject Ho Gaya</h2>
         <p className="text-muted-foreground text-sm leading-relaxed mb-6">
           Aapka account reject ho gaya hai. Contact karo: hello@thekabari.pk

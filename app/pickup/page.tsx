@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { SCRAP_ICON } from "@/lib/scrapIcons";
+import { TrashIcon, ArrowPathIcon, CheckCircleIcon, LightBulbIcon } from "@heroicons/react/24/outline";
 
 const TRASH_TYPES = [
-  { id: "Paper",       emoji: "📰", label: "Paper" },
-  { id: "Plastic",     emoji: "🧴", label: "Plastic" },
-  { id: "Metal",       emoji: "🔧", label: "Metal" },
-  { id: "Electronics", emoji: "💻", label: "Electronics" },
-  { id: "Glass",       emoji: "🫙", label: "Glass" },
-  { id: "Cardboard",   emoji: "📦", label: "Cardboard" },
-  { id: "Other",       emoji: "🗑️", label: "Other" },
+  { id: "Paper",       icon: SCRAP_ICON.Paper,       label: "Paper" },
+  { id: "Plastic",     icon: SCRAP_ICON.Plastic,     label: "Plastic" },
+  { id: "Metal",       icon: SCRAP_ICON.Metal,       label: "Metal" },
+  { id: "Electronics", icon: SCRAP_ICON.Electronics, label: "Electronics" },
+  { id: "Glass",       icon: SCRAP_ICON.Glass,       label: "Glass" },
+  { id: "Cardboard",   icon: SCRAP_ICON.Cardboard,   label: "Cardboard" },
+  { id: "Other",       icon: TrashIcon,              label: "Other" },
 ];
 
 const CITIES = ["Karachi","Lahore","Islamabad","Rawalpindi","Faisalabad","Peshawar","Quetta"];
@@ -78,7 +80,7 @@ export default function PickupPage() {
 
   if (checkingAuth) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-4xl animate-spin">♻️</div>
+      <ArrowPathIcon className="size-10 animate-spin text-green-400" />
     </div>
   );
 
@@ -86,7 +88,9 @@ export default function PickupPage() {
     <div className="min-h-screen bg-gray-50">
       {/* NAV */}
       <nav className="bg-white border-b border-gray-100 px-6 h-14 flex items-center justify-between sticky top-0 z-50">
-        <Link href="/" className="font-black text-green-900 text-lg">theKabari ♻️</Link>
+        <Link href="/" className="flex items-center gap-1.5 font-black text-green-900 text-lg">
+          theKabari <ArrowPathIcon className="size-4" />
+        </Link>
         <div className="flex gap-3">
           {session ? (
             <Link href="/dashboard" className="px-4 py-2 rounded-full bg-green-400 text-white text-sm font-semibold hover:bg-green-900 transition-colors">
@@ -106,7 +110,7 @@ export default function PickupPage() {
         {/* Success State */}
         {success ? (
           <div className="bg-white rounded-3xl border border-gray-100 p-10 text-center">
-            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-3xl mx-auto mb-5">✅</div>
+            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5"><CheckCircleIcon className="size-8 text-green-500" /></div>
             <h2 className="text-2xl font-black mb-2">Pickup Schedule Ho Gaya!</h2>
             <p className="text-gray-400 text-sm mb-2">Aapki request record ho gayi hai.</p>
             <div className="inline-block bg-gray-50 border border-gray-100 rounded-xl px-4 py-2 text-xs font-mono text-gray-500 mb-6">
@@ -136,10 +140,10 @@ export default function PickupPage() {
             {/* Header */}
             <div className="mb-8">
               <span className="inline-block bg-green-50 border border-green-100 rounded-full px-4 py-1 text-xs font-bold text-green-600 mb-3">
-                {session ? "Member Pickup 🌟" : "One-Time Pickup"}
+                {session ? "Member Pickup" : "One-Time Pickup"}
               </span>
               <h1 className="text-3xl font-black tracking-tight mb-2">
-                Pickup Schedule Karo ♻️
+                Pickup Schedule Karo
               </h1>
               <p className="text-gray-400 text-sm">
                 {session
@@ -163,8 +167,9 @@ export default function PickupPage() {
 
             {/* Guest prompt */}
             {!session && (
-              <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-6 text-sm text-amber-700">
-                💡 <Link href="/auth?tab=signup" className="font-bold underline">Account banao</Link> — pickup track karo, XP earn karo, aur leaderboard pe aao!
+              <div className="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-6 text-sm text-amber-700">
+                <LightBulbIcon className="size-4 flex-shrink-0 mt-0.5" />
+                <span><Link href="/auth?tab=signup" className="font-bold underline">Account banao</Link> — pickup track karo, XP earn karo, aur leaderboard pe aao!</span>
               </div>
             )}
 
@@ -222,7 +227,7 @@ export default function PickupPage() {
                           ? "bg-green-50 border-green-400 text-green-700"
                           : "bg-gray-50 border-gray-200 text-gray-500 hover:border-green-200"
                       }`}>
-                      <span className="text-xl">{t.emoji}</span>
+                      <t.icon className="size-5" />
                       <span>{t.label}</span>
                     </button>
                   ))}
@@ -246,7 +251,7 @@ export default function PickupPage() {
 
               <button type="submit" disabled={loading}
                 className="w-full bg-green-400 hover:bg-green-900 text-white py-3.5 rounded-full font-bold text-base transition-colors disabled:opacity-60">
-                {loading ? "Submitting..." : "Pickup Schedule Karo ✓"}
+                {loading ? "Submitting..." : "Pickup Schedule Karo"}
               </button>
             </form>
           </>

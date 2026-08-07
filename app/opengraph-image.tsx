@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 export const runtime = "edge";
 export const alt     = "theKabari — Scrap Se XP Kamao, Paise Lo";
@@ -42,8 +43,9 @@ export default function OgImage() {
             background: "#4ade80", borderRadius: 16,
             width: 52, height: 52,
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 28,
-          }}>♻️</div>
+          }}>
+            <ArrowPathIcon style={{ width: 28, height: 28, color: "#0d1a10" }} strokeWidth={2} />
+          </div>
           <span style={{ color: "#4ade80", fontSize: 32, fontWeight: 900, letterSpacing: "-1px" }}>theKabari</span>
         </div>
 

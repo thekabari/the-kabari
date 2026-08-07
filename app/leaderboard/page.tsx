@@ -11,6 +11,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getLevel, getLevelName } from "@/lib/utils";
 import Link from "next/link";
 import { Profile } from "@/types";
+import { TrophyIcon, RocketLaunchIcon } from "@heroicons/react/24/outline";
 
 export const revalidate = 60;
 
@@ -49,7 +50,6 @@ export default async function LeaderboardPage() {
   const isDummy = !players || players.length === 0;
   const displayPlayers = isDummy ? DUMMY_PLAYERS : players;
   const myRank = players?.findIndex(p => p.id === myProfile?.id);
-  const medals = ["🥇", "🥈", "🥉"];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -72,7 +72,7 @@ export default async function LeaderboardPage() {
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="mb-8">
           <span className="inline-block bg-green-50 border border-green-100 rounded-full px-4 py-1 text-xs font-bold text-green-600 mb-3">Leaderboard</span>
-          <h1 className="text-4xl font-black tracking-tighter mb-2">Is mahine ke<br/>top players 🏆</h1>
+          <h1 className="text-4xl font-black tracking-tighter mb-2">Is mahine ke<br/>top players <TrophyIcon className="size-8 text-amber-400 inline-block align-middle ml-1" /></h1>
           <p className="text-gray-400 text-sm">Jitna zyada recycle karo — utna zyada XP, utna zyada rank.</p>
         </div>
 
@@ -119,10 +119,10 @@ export default async function LeaderboardPage() {
                   className={`flex items-center gap-3 px-5 py-4 transition-colors ${
                     isMe ? "bg-green-50" : isDummy ? "opacity-75 hover:opacity-100" : "hover:bg-gray-50"
                   }`}>
-                  <div className={`w-8 text-center font-black text-base flex-shrink-0 ${
+                  <div className={`w-8 flex items-center justify-center font-black text-base flex-shrink-0 ${
                     i === 0 ? "text-amber-400" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-700" : "text-gray-300"
                   }`}>
-                    {medals[i] || `#${i + 1}`}
+                    {i < 3 ? <TrophyIcon className="size-5" /> : `#${i + 1}`}
                   </div>
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0 ${
                     i === 0 ? "bg-amber-50 text-amber-700" : i === 1 ? "bg-gray-100 text-gray-500" :
@@ -154,7 +154,7 @@ export default async function LeaderboardPage() {
 
         {!session && (
           <div className="mt-6 bg-green-900 rounded-2xl p-6 text-center text-white">
-            <h3 className="text-xl font-black mb-2">Leaderboard pe aao! 🚀</h3>
+            <h3 className="text-xl font-black mb-2 flex items-center justify-center gap-2">Leaderboard pe aao! <RocketLaunchIcon className="size-5" /></h3>
             <p className="text-white/60 text-sm mb-4">Sign up karo, scrap recycle karo, aur apna naam yahan dekho.</p>
             <Link href="/auth?tab=signup" className="inline-block bg-green-400 text-white px-8 py-3 rounded-full font-bold hover:bg-green-600 transition-colors">
               Join Now — It's Free ↗

@@ -2,7 +2,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Order } from "@/types";
-import { SCRAP_EMOJI } from "@/lib/utils";
+import { ScrapIcon } from "@/lib/scrapIcons";
+import {
+  ArrowPathIcon, ClockIcon, TruckIcon, CheckCircleIcon, XCircleIcon,
+  CheckIcon, XMarkIcon, InboxIcon, MapPinIcon, CalendarDaysIcon,
+  UserIcon, TicketIcon,
+} from "@heroicons/react/24/outline";
 
 interface ScrapRate { slug: string; name: string; emoji: string; rate_pkr: number; hot: boolean; }
 
@@ -18,6 +23,9 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const STATUS_FILTERS = ["all", "pending", "dispatched", "completed", "cancelled"] as const;
 type StatusFilter = typeof STATUS_FILTERS[number];
+const STATUS_ICON: Record<Exclude<StatusFilter, "all">, typeof ClockIcon> = {
+  pending: ClockIcon, dispatched: TruckIcon, completed: CheckCircleIcon, cancelled: XCircleIcon,
+};
 
 function rateForType(type: string, rates: ScrapRate[]): number {
   return rates.find(r => r.name.toLowerCase() === type.toLowerCase())?.rate_pkr ?? 0;
@@ -78,7 +86,7 @@ export default function RequestsPage() {
       body: JSON.stringify({ action, ...extra }),
     });
     if (res.ok) {
-      showToast(action === "dispatch" ? "Dispatched! 🚚" : action === "complete" ? "Completed! ✅" : "Cancelled.");
+      showToast(action === "dispatch" ? "Dispatched!" : action === "complete" ? "Completed!" : "Cancelled.");
       setCompleting(null);
       load();
     }
@@ -96,7 +104,7 @@ export default function RequestsPage() {
     cancelled:  orders.filter(o => o.status === "cancelled").length,
   };
 
-  if (loading) return <div className="py-20 text-center"><div className="text-4xl animate-spin">♻️</div></div>;
+  if (loading) return <div className="py-20 text-center"><ArrowPathIcon className="size-8 mx-auto animate-spin text-muted-foreground" /></div>;
 
   return (
     <div className="space-y-5">
@@ -113,19 +121,23 @@ export default function RequestsPage() {
 
       {/* Filter pills */}
       <div className="flex gap-2 overflow-x-auto pb-1">
-        {STATUS_FILTERS.map(s => (
-          <button key={s} onClick={() => setFilter(s)}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 ${
-              filter === s ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:border-primary/40"
-            }`}>
-            {s === "all" ? `All (${orders.length})` : `${s === "pending" ? "⏳" : s === "dispatched" ? "🚚" : s === "completed" ? "✅" : "❌"} ${s[0].toUpperCase() + s.slice(1)} (${counts[s as keyof typeof counts] ?? 0})`}
-          </button>
-        ))}
+        {STATUS_FILTERS.map(s => {
+          const Icon = s !== "all" ? STATUS_ICON[s] : null;
+          return (
+            <button key={s} onClick={() => setFilter(s)}
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 ${
+                filter === s ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:border-primary/40"
+              }`}>
+              {Icon && <Icon className="size-3.5" />}
+              {s === "all" ? `All (${orders.length})` : `${s[0].toUpperCase() + s.slice(1)} (${counts[s as keyof typeof counts] ?? 0})`}
+            </button>
+          );
+        })}
       </div>
 
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-border bg-card shadow-card py-16 text-center">
-          <div className="text-4xl mb-3">📭</div>
+          <InboxIcon className="size-10 mx-auto mb-3 text-muted-foreground" />
           <p className="text-muted-foreground text-sm">Koi request nahi</p>
         </div>
       ) : (
@@ -138,26 +150,28 @@ export default function RequestsPage() {
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${STATUS_CHIP[o.status] ?? STATUS_CHIP.pending}`}>
                       {STATUS_LABEL[o.status] ?? o.status.toUpperCase()}
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                      {(o as Order & { pickup_type?: string }).pickup_type === "regular" ? "👤 Member" : "🎟️ One-Time"}
+                    <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                      {(o as Order & { pickup_type?: string }).pickup_type === "regular"
+                        ? <><UserIcon className="size-3" /> Member</>
+                        : <><TicketIcon className="size-3" /> One-Time</>}
                     </span>
                     <span className="text-xs text-muted-foreground">#{o.id}</span>
                   </div>
                   <p className="font-bold text-sm">{o.user_name}</p>
                   <p className="text-xs text-muted-foreground">{(o as Order & { phone?: string }).phone} · {o.user_city}</p>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">📍 {o.address}</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground mt-1 truncate"><MapPinIcon className="size-3.5 flex-shrink-0" /> {o.address}</p>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {o.trash_types.map(t => (
-                      <span key={t} className="text-[10px] bg-muted border border-border rounded-full px-2 py-0.5 font-medium">
-                        {SCRAP_EMOJI[t] || "♻️"} {t}
+                      <span key={t} className="flex items-center gap-1 text-[10px] bg-muted border border-border rounded-full px-2 py-0.5 font-medium">
+                        <ScrapIcon type={t} className="size-3" /> {t}
                         {rates.length > 0 && ` · Rs.${rateForType(t, rates)}/kg`}
                       </span>
                     ))}
                   </div>
                   {o.notes && <p className="text-xs text-muted-foreground mt-1 italic">"{o.notes}"</p>}
                   {o.scheduled_date && (
-                    <p className="text-xs text-primary font-semibold mt-1">
-                      📅 {new Date(o.scheduled_date).toLocaleDateString("en-PK", { weekday: "short", day: "numeric", month: "short" })}
+                    <p className="flex items-center gap-1 text-xs text-primary font-semibold mt-1">
+                      <CalendarDaysIcon className="size-3.5" /> {new Date(o.scheduled_date).toLocaleDateString("en-PK", { weekday: "short", day: "numeric", month: "short" })}
                     </p>
                   )}
                 </div>
@@ -166,24 +180,24 @@ export default function RequestsPage() {
                   {o.status === "pending" && (
                     <>
                       <button onClick={() => patchOrder(o.id, "dispatch")}
-                        className="px-4 py-2 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-full text-xs font-bold transition-colors">
-                        🚚 Dispatch
+                        className="flex items-center gap-1.5 px-4 py-2 bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white rounded-full text-xs font-bold transition-colors">
+                        <TruckIcon className="size-3.5" /> Dispatch
                       </button>
                       <button onClick={() => patchOrder(o.id, "cancel")}
-                        className="px-4 py-2 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-full text-xs font-bold transition-colors">
-                        ✗ Cancel
+                        className="flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-full text-xs font-bold transition-colors">
+                        <XMarkIcon className="size-3.5" /> Cancel
                       </button>
                     </>
                   )}
                   {o.status === "dispatched" && (
                     <>
                       <button onClick={() => openCompleteForm(o)}
-                        className="px-4 py-2 bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground rounded-full text-xs font-bold transition-colors">
-                        ✓ Complete
+                        className="flex items-center gap-1.5 px-4 py-2 bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground rounded-full text-xs font-bold transition-colors">
+                        <CheckIcon className="size-3.5" /> Complete
                       </button>
                       <button onClick={() => patchOrder(o.id, "cancel")}
-                        className="px-4 py-2 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-full text-xs font-bold transition-colors">
-                        ✗ Cancel
+                        className="flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-full text-xs font-bold transition-colors">
+                        <XMarkIcon className="size-3.5" /> Cancel
                       </button>
                     </>
                   )}
@@ -212,7 +226,7 @@ export default function RequestsPage() {
                     {Object.entries(breakdown).map(([type, vals]) => (
                       <div key={type} className="grid grid-cols-3 gap-2 items-center">
                         <div className="flex items-center gap-1.5 text-sm font-semibold">
-                          <span>{SCRAP_EMOJI[type] || "♻️"}</span>
+                          <ScrapIcon type={type} className="size-4 flex-shrink-0" />
                           <span className="truncate">{type}</span>
                         </div>
                         <input type="number" min="0" step="0.1" placeholder="0" value={vals.kg}
@@ -245,8 +259,8 @@ export default function RequestsPage() {
                         trash_type: Object.keys(breakdown)[0] || "",
                       })}
                       disabled={totalKg === 0 && totalCash === 0}
-                      className="px-5 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-xs font-bold transition-all disabled:opacity-40">
-                      Confirm Complete ✓
+                      className="flex items-center gap-1.5 px-5 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-xs font-bold transition-all disabled:opacity-40">
+                      <CheckIcon className="size-3.5" /> Confirm Complete
                     </button>
                     <button onClick={() => setCompleting(null)}
                       className="px-5 py-2 border border-border text-muted-foreground rounded-full text-xs font-semibold hover:border-destructive/40 hover:text-destructive transition-colors">

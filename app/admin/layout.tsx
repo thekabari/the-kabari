@@ -4,16 +4,20 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { LogoMark } from "@/app/components/LogoMark";
+import {
+  ChartBarIcon, ArchiveBoxIcon, ClockIcon, UsersIcon, PlusCircleIcon,
+  GiftIcon, BanknotesIcon, TagIcon, ArrowLeftStartOnRectangleIcon, ArrowPathIcon,
+} from "@heroicons/react/24/outline";
 
 const NAV = [
-  { id: "overview",   label: "Overview",  icon: "📊", href: "/admin/overview" },
-  { id: "requests",   label: "Requests",  icon: "📦", href: "/admin/requests" },
-  { id: "pending",    label: "Approvals", icon: "⏳", href: "/admin/pending" },
-  { id: "users",      label: "Users",     icon: "👥", href: "/admin/users" },
-  { id: "addxp",      label: "Add XP",    icon: "➕", href: "/admin/addxp" },
-  { id: "partners",   label: "Partners",  icon: "🎁", href: "/admin/partners" },
-  { id: "settlement", label: "Settle",    icon: "💰", href: "/admin/settlement" },
-  { id: "prices",     label: "Prices",    icon: "🏷️", href: "/admin/prices" },
+  { id: "overview",   label: "Overview",  icon: ChartBarIcon,   href: "/admin/overview" },
+  { id: "requests",   label: "Requests",  icon: ArchiveBoxIcon, href: "/admin/requests" },
+  { id: "pending",    label: "Approvals", icon: ClockIcon,      href: "/admin/pending" },
+  { id: "users",      label: "Users",     icon: UsersIcon,      href: "/admin/users" },
+  { id: "addxp",      label: "Add XP",    icon: PlusCircleIcon, href: "/admin/addxp" },
+  { id: "partners",   label: "Partners",  icon: GiftIcon,       href: "/admin/partners" },
+  { id: "settlement", label: "Settle",    icon: BanknotesIcon,  href: "/admin/settlement" },
+  { id: "prices",     label: "Prices",    icon: TagIcon,        href: "/admin/prices" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -46,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!ready) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-4xl animate-spin">♻️</div>
+      <ArrowPathIcon className="size-10 animate-spin text-muted-foreground" />
     </div>
   );
 
@@ -76,16 +80,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link
               key={item.id}
               href={item.href}
-              className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all"
-              style={{
-                background: item.active ? "rgba(255,255,255,0.10)" : undefined,
-                color: item.active ? "white" : "rgba(255,255,255,0.52)",
-              }}
+              className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                item.active
+                  ? "bg-white/10 text-white hover:bg-white/15"
+                  : "text-white/50 hover:bg-white/5 hover:text-white/90"
+              }`}
             >
               {item.active && (
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-amber-400 rounded-r" />
               )}
-              <span className="text-base w-5 text-center flex-shrink-0">{item.icon}</span>
+              <item.icon className="size-5 flex-shrink-0" />
               <span className="flex-1 text-left">{item.label}</span>
               {item.badge > 0 && (
                 <span className="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center tabular-nums flex-shrink-0">
@@ -99,10 +103,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="px-3 py-4 flex-shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.10)" }}>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-            style={{ color: "rgba(255,255,255,0.38)" }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/40 hover:bg-white/5 hover:text-white transition-all"
           >
-            <span className="text-base w-5 text-center flex-shrink-0">↩</span>
+            <ArrowLeftStartOnRectangleIcon className="size-5 flex-shrink-0" />
             <span>Logout</span>
           </button>
         </div>
@@ -129,8 +132,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between px-7 flex-shrink-0"
           style={{ borderBottom: "1px solid hsl(var(--border))", background: "hsl(var(--background) / 0.85)", backdropFilter: "blur(12px)" }}
         >
-          <h1 className="font-semibold text-sm tracking-tight">
-            {activeNav.icon} {activeNav.label}
+          <h1 className="font-semibold text-sm tracking-tight flex items-center gap-2">
+            <activeNav.icon className="size-4" /> {activeNav.label}
           </h1>
         </header>
 
@@ -151,10 +154,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link
             key={item.id}
             href={item.href}
-            className="flex-1 min-w-0 flex flex-col items-center py-2 gap-0.5 text-[9px] font-medium relative transition-colors flex-shrink-0"
-            style={{ color: item.active ? "#f0a500" : "rgba(255,255,255,0.42)" }}
+            className={`flex-1 min-w-0 flex flex-col items-center py-2 gap-0.5 text-[9px] font-medium relative transition-colors flex-shrink-0 ${
+              item.active ? "text-[#f0a500]" : "text-white/40 hover:text-white/70"
+            }`}
           >
-            <span className="text-lg leading-none">{item.icon}</span>
+            <item.icon className="size-5" />
             <span className="truncate w-full text-center px-1">{item.label.split(" ")[0]}</span>
             {item.badge > 0 && (
               <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-red-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center">

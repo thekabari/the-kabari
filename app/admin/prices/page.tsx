@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  ArrowPathIcon, ArrowUturnLeftIcon, PlusIcon, XMarkIcon, ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 interface ScrapRate {
   slug: string;
@@ -93,14 +96,14 @@ export default function PricesPage() {
     setSaving(false);
     if (res.ok) {
       setTablesMissing(false);
-      showToast("Rates saved! Landing page aur requests pe reflect ho jayenge ✓");
+      showToast("Rates saved! Landing page aur requests pe reflect ho jayenge");
     } else {
       const d = await res.json().catch(() => null);
       showToast(d?.error || "Save failed — DB tables missing? Check migration below.");
     }
   }
 
-  if (loading) return <div className="py-20 text-center"><div className="text-4xl animate-spin">♻️</div></div>;
+  if (loading) return <div className="py-20 text-center"><ArrowPathIcon className="size-8 mx-auto animate-spin text-muted-foreground" /></div>;
 
   const xpMult = parseFloat(xpPerRupee) || 0;
 
@@ -123,19 +126,19 @@ export default function PricesPage() {
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => { setRates(DEFAULT_RATES); showToast("Defaults restored — Save karo to apply"); }}
-            className="px-5 py-2.5 border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground rounded-full text-sm font-semibold transition-all">
-            ↺ Restore Defaults
+            className="flex items-center gap-1.5 px-5 py-2.5 border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground rounded-full text-sm font-semibold transition-all">
+            <ArrowUturnLeftIcon className="size-4" /> Restore Defaults
           </button>
           <button onClick={handleSave} disabled={saving}
             className="px-6 py-2.5 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-sm font-bold transition-all disabled:opacity-60">
-            {saving ? "Saving..." : "Save Rates ✓"}
+            {saving ? "Saving..." : "Save Rates"}
           </button>
         </div>
       </div>
 
       {tablesMissing && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-700">
-          <p className="font-bold mb-1">⚠️ DB tables missing</p>
+          <p className="font-bold mb-1 flex items-center gap-1.5"><ExclamationTriangleIcon className="size-4" /> DB tables missing</p>
           <p className="text-xs mb-2">
             <code className="font-mono">scrap_rates</code> aur <code className="font-mono">settings</code> tables nahi bani.
             Supabase SQL editor mein run karo:
@@ -188,8 +191,8 @@ ALTER TABLE partners ADD COLUMN IF NOT EXISTS portal_password_hash text;`}</pre>
           </div>
           <button
             onClick={() => setShowAddForm(v => !v)}
-            className="px-4 py-1.5 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-xs font-bold transition-all">
-            + Add Material
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-xs font-bold transition-all">
+            <PlusIcon className="size-3.5" /> Add Material
           </button>
         </div>
 
@@ -231,7 +234,7 @@ ALTER TABLE partners ADD COLUMN IF NOT EXISTS portal_password_hash text;`}</pre>
             <div className="flex gap-2">
               <button type="submit"
                 className="px-4 py-2.5 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-xs font-bold transition-all">
-                Add ✓
+                Add
               </button>
               <button type="button" onClick={() => { setShowAddForm(false); setNewRate({ ...BLANK_NEW }); }}
                 className="px-4 py-2.5 border border-border text-muted-foreground rounded-full text-xs font-semibold transition-colors hover:border-destructive/40 hover:text-destructive">
@@ -246,8 +249,8 @@ ALTER TABLE partners ADD COLUMN IF NOT EXISTS portal_password_hash text;`}</pre>
             <p className="text-muted-foreground text-sm mb-3">Koi rates nahi. Defaults restore karo ya manually add karo.</p>
             <button
               onClick={() => { setRates(DEFAULT_RATES); showToast("Defaults loaded — Save karo to apply"); }}
-              className="px-5 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-sm font-bold transition-all">
-              ↺ Restore Defaults
+              className="flex items-center gap-1.5 mx-auto px-5 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-sm font-bold transition-all">
+              <ArrowUturnLeftIcon className="size-4" /> Restore Defaults
             </button>
           </div>
         ) : (
@@ -287,7 +290,7 @@ ALTER TABLE partners ADD COLUMN IF NOT EXISTS portal_password_hash text;`}</pre>
                   onClick={() => deleteRate(rate.slug)}
                   className="size-8 flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex-shrink-0"
                   title="Remove">
-                  ✕
+                  <XMarkIcon className="size-4" />
                 </button>
               </div>
             ))}
@@ -298,7 +301,7 @@ ALTER TABLE partners ADD COLUMN IF NOT EXISTS portal_password_hash text;`}</pre>
       <div className="flex justify-end">
         <button onClick={handleSave} disabled={saving}
           className="px-6 py-2.5 bg-primary hover:opacity-90 text-primary-foreground rounded-full text-sm font-bold transition-all disabled:opacity-60">
-          {saving ? "Saving..." : "Save All Rates ✓"}
+          {saving ? "Saving..." : "Save All Rates"}
         </button>
       </div>
     </div>
