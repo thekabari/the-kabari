@@ -35,16 +35,24 @@ export async function PUT(req: NextRequest) {
   const supabase = createAdminClient();
   const now = new Date().toISOString();
 
-  const upsertRates = rates.map((r: { slug: string; name: string; emoji: string; rate_pkr: number; hot: boolean }) =>
-    supabase.from("scrap_rates").upsert({ ...r, updated_at: now })
-  );
+  const slugs: string[] = rates.map((r: { slug: string }) => r.slug);
 
-  const upsertSetting = supabase
-    .from("settings")
-    .upsert({ key: "xp_per_rupee", value: String(xp_per_rupee), updated_at: now });
+  // Remove rows that are no longer in the list
+  if (slugs.length > 0) {
+    await supabase.from("scrap_rates").delete().not("slug", "in", `(${slugs.join(",")})`);
+  } else {
+    await supabase.from("scrap_rates").delete().neq("slug", "");
+  }
 
-  const results = await Promise.all([...upsertRates, upsertSetting]);
-  const firstErr = results.find(r => r.error);
+  // Upsert current set + XP setting
+  const upsertResults = await Promise.all([
+    ...rates.map((r: { slug: string; name: string; emoji: string; rate_pkr: number; hot: boolean }) =>
+      supabase.from("scrap_rates").upsert({ ...r, updated_at: now })
+    ),
+    supabase.from("settings").upsert({ key: "xp_per_rupee", value: String(xp_per_rupee), updated_at: now }),
+  ]);
+
+  const firstErr = upsertResults.find(r => r.error);
   if (firstErr?.error) return NextResponse.json({ error: firstErr.error.message }, { status: 500 });
 
   return NextResponse.json({ ok: true });
