@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"\\\\.\\(tsx|ts|css\\)$\")"
+      "Bash(grep -E \"\\\\.\\(tsx|ts|css\\)$\")",
+      "WebFetch(domain:www.mintrewards.app)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(mkdir -p \"f:/Kabari/thekabari/app/api/partners/redeem\" \"f:/Kabari/thekabari/app/api/partners/my-coupons\" \"f:/Kabari/thekabari/app/api/business/[slug]/verify\" \"f:/Kabari/thekabari/app/api/business/[slug]/use\" \"f:/Kabari/thekabari/app/api/admin/partners/[id]/items\" \"f:/Kabari/thekabari/app/business/[slug]\")"
+    ],
+    "additionalDirectories": [
+      "f:\\Kabari\\thekabari\\app\\api\\business\\[slug]"
     ]
   }
 }
