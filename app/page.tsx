@@ -67,8 +67,30 @@ function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
   return <motion.span ref={ref}>{display}</motion.span>;
 }
 
+const FALLBACK_RATES = [
+  { emoji:"📰", name:"Paper",       rate_pkr:9,   hot:false },
+  { emoji:"📦", name:"Cardboard",   rate_pkr:12,  hot:false },
+  { emoji:"🧴", name:"Plastic",     rate_pkr:22,  hot:false },
+  { emoji:"🔧", name:"Iron / Steel",rate_pkr:47,  hot:true  },
+  { emoji:"⚙️", name:"Aluminum",    rate_pkr:110, hot:true  },
+  { emoji:"🔌", name:"Copper",      rate_pkr:450, hot:true  },
+  { emoji:"💻", name:"Electronics", rate_pkr:60,  hot:false },
+  { emoji:"🫙", name:"Glass",       rate_pkr:4,   hot:false },
+];
+
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [liveRates, setLiveRates] = useState(FALLBACK_RATES);
+
+  useEffect(() => {
+    fetch("/api/rates").then(r => r.ok ? r.json() : null).then(data => {
+      if (data?.rates?.length) {
+        setLiveRates(data.rates.map((r: { emoji: string; name: string; rate_pkr: number; hot: boolean }) => ({
+          emoji: r.emoji, name: r.name, rate_pkr: r.rate_pkr, hot: r.hot,
+        })));
+      }
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -327,16 +349,7 @@ export default function HomePage() {
             </motion.div>
           </div>
           <InView variants={staggerFast(0, 0.07)} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {[
-              { emoji:"📰", name:"Paper",       rate:"Rs. 9",   unit:"per kg", hot: false },
-              { emoji:"📦", name:"Cardboard",   rate:"Rs. 12",  unit:"per kg", hot: false },
-              { emoji:"🧴", name:"Plastic",     rate:"Rs. 22",  unit:"per kg", hot: false },
-              { emoji:"🔧", name:"Iron / Steel",rate:"Rs. 47",  unit:"per kg", hot: true  },
-              { emoji:"⚙️", name:"Aluminum",    rate:"Rs. 110", unit:"per kg", hot: true  },
-              { emoji:"🔌", name:"Copper",      rate:"Rs. 450", unit:"per kg", hot: true  },
-              { emoji:"💻", name:"Electronics", rate:"Rs. 60",  unit:"per kg", hot: false },
-              { emoji:"🫙", name:"Glass",       rate:"Rs. 4",   unit:"per kg", hot: false },
-            ].map(r => (
+            {liveRates.map(r => (
               <motion.div key={r.name} variants={cardReveal}
                 whileHover={{ y: -8, scale: 1.03, boxShadow: "0 16px 32px -8px rgba(34,197,94,0.15)", transition: { ease: "easeOut", duration: 0.18 } }}
                 className="relative bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 cursor-default"
@@ -346,8 +359,8 @@ export default function HomePage() {
                 )}
                 <div className="text-2xl mb-2">{r.emoji}</div>
                 <div className="text-xs text-gray-400 dark:text-gray-500 font-medium mb-0.5">{r.name}</div>
-                <div className="text-xl font-black text-green-600 dark:text-green-400">{r.rate}</div>
-                <div className="text-[10px] text-gray-400 dark:text-gray-500">{r.unit}</div>
+                <div className="text-xl font-black text-green-600 dark:text-green-400 tabular-nums">Rs. {r.rate_pkr}</div>
+                <div className="text-[10px] text-gray-400 dark:text-gray-500">per kg</div>
               </motion.div>
             ))}
           </InView>

@@ -68,6 +68,14 @@ export interface PartnerItem {
   created_at: string;
 }
 
+export interface ScrapRate {
+  slug: string;
+  name: string;
+  emoji: string;
+  rate_pkr: number;
+  hot: boolean;
+}
+
 export interface Coupon {
   id: string;
   user_id: string;
